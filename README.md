@@ -19,3 +19,4 @@ Allez ensuite dans le dossier `res/rapports/groupeXX` et éditez le nom du dossi
 Une fois ces tâches réalisées, éditez ce fichier texte de la façon suivante :
  1. Supprimez les instructions ci-dessus (mais gardez le début jusqu'au trait horizontal).
  2. Indiquez la composition du binôme avec, pour chaque étudiant : son prénom, son nom et son adresse email.
+ 3. Hello Ch'ti  bilooute
