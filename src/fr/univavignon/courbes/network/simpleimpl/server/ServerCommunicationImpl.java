@@ -68,7 +68,7 @@ public class ServerCommunicationImpl implements ServerCommunication, Runnable
 					while(ias.hasMoreElements() && ip==null)
 					{	InetAddress ia = ias.nextElement();
 						String iaStr = ia.getHostAddress();
-						if(iaStr.startsWith("192.168."))
+						if(iaStr.startsWith("192.168.") || iaStr.startsWith("10.104."))
 								ip = iaStr;
 					}
 				}
@@ -448,6 +448,16 @@ public class ServerCommunicationImpl implements ServerCommunication, Runnable
 					result[i] = Direction.NONE;
 			}
 		}
+		
+		// si aucune direction autre que NONE, on renvoie null
+		boolean none = true;
+		int i = 0;
+		while(none && i<result.length)
+		{	none = result[i]==Direction.NONE;
+			i++;
+		}
+		if(none)
+			result = null;
 		
 		return result;
 	}
