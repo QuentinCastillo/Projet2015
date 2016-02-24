@@ -47,6 +47,8 @@ import fr.univavignon.courbes.inter.simpleimpl.remote.server.ServerGameRemotePla
 import fr.univavignon.courbes.inter.simpleimpl.remote.server.ServerGameRoundPanel;
 import fr.univavignon.courbes.network.ClientCommunication;
 import fr.univavignon.courbes.network.ServerCommunication;
+import fr.univavignon.courbes.stats.StatListPanel;
+import fr.univavignon.courbes.stats.Stats;
 
 /**
  * Menu principal du jeu.
@@ -66,7 +68,6 @@ public class MainWindow extends JFrame implements ErrorHandler, WindowListener
 	 */
 	public MainWindow()
 	{	super();
-		
 		initWindow();
 	}
 	
@@ -218,9 +219,7 @@ public class MainWindow extends JFrame implements ErrorHandler, WindowListener
 				currentPanel = new ProfileListPanel(this);
 				break;
 			case STATISTICS:
-				System.out.println("Option pas encore implémentée...");
-				// TODO à compléter
-				// currentPanel = new XxxxxxPanel(this);
+				currentPanel = new StatListPanel(this);
 				break;
 		}
 		
