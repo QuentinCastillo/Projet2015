@@ -186,7 +186,12 @@ public class ServerGameRemotePlayerSelectionPanel extends AbstractPlayerSelectio
 	
 	@Override
 	public int getMinPlayerNbr()
-	{	return MIN_PLYR_NBR;
+	{	Round round = mainWindow.currentRound;
+		Player players[] = round.players;
+		int result = MIN_PLYR_NBR;
+		if(players.length==0)
+			result++;
+		return result;
 	}
 	
 	@Override
@@ -296,13 +301,12 @@ public class ServerGameRemotePlayerSelectionPanel extends AbstractPlayerSelectio
 			{	e.printStackTrace();
 			}
 			mainWindow.displayPanel(PanelName.SERVER_GAME_PLAY);
-			mainWindow.serverCom.sendRound(round);
+//			mainWindow.serverCom.sendRound(round);
 		}
 		else
 		{	JOptionPane.showMessageDialog(mainWindow, 
-				"<html>Les données des joueurs locaux ne sont pas correctement remplies. Vérifiez que :" +
-				"<br/>- tous les profils sont définis et différents, et que" +
-				"<br/>- toutes les commandes sont définies et différentes.</html>");
+				"<html>Tous les joueurs distants n'ont pas été sélectionnés.<br/>"
+				+ "Ajoutez de nouveaux joueurs ou diminuez le nombre de joueurs distants.</html>");
 		}
 	}
 	
