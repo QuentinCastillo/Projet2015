@@ -46,11 +46,11 @@ public class Profile implements Serializable, Comparable<Profile>
 	public int eloRank;
 	
 	// Rajouter les variables stats ici :
-	// public int partyNumber;
-	// public int partyWon;
-	// public int partyLost;
-	// public int pointInParty;
-	// public int pointInRound;
+	public int partyNumber;
+	public int partyWon;
+	public int partyLost;
+	public int pointInParty;
+	public int pointInRound;
 	
 		
 	////////////////////////////////////////////////////////////////
