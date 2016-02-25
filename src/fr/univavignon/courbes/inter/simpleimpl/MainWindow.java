@@ -87,7 +87,9 @@ public class MainWindow extends JFrame implements ErrorHandler, WindowListener
 	 * Initialise la fenêtre.
 	 */
 	private void initWindow()
-	{	setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+	{	
+		
+		setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
 	
 		updateTitle();
 		try

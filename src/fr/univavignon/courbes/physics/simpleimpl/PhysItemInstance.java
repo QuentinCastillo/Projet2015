@@ -24,6 +24,8 @@ import fr.univavignon.courbes.common.Constants;
 import fr.univavignon.courbes.common.ItemInstance;
 import fr.univavignon.courbes.common.ItemType;
 import fr.univavignon.courbes.common.Snake;
+import fr.univavignon.courbes.sounds.Audio;
+import fr.univavignon.courbes.sounds.AudioHandle;
 
 /**
  * Classe fille de {@link ItemInstance}, permettant d'intégrer
@@ -50,7 +52,9 @@ public class PhysItemInstance extends ItemInstance
 	 * 		Position en ordonnée.
 	 */
 	public PhysItemInstance(ItemType type, int x, int y)
-	{	init(type,x,y);
+	{	
+		
+		init(type,x,y);
 	}
 	
 	/**
@@ -65,7 +69,8 @@ public class PhysItemInstance extends ItemInstance
 	{	// tirage au sort du type d'item
 		int idx = RANDOM.nextInt(ItemType.values().length);
 		ItemType type = ItemType.values()[idx];
-		
+		AudioHandle a = new Audio("res/sounds/pop.wav");
+		a.start();
 		// on finit l'init
 		init(type,x,y);
 	}
@@ -240,8 +245,19 @@ public class PhysItemInstance extends ItemInstance
 		
 		// item individuel visant le ramasseur
 		else if(type==ItemType.USER_FAST || type==ItemType.USER_FLY || type==ItemType.USER_SLOW)
-		{	remainingTime = type.duration;
-			snake.currentItems.offer(this);
+		{	
+			/*if(type==ItemType.USER_FAST){
+				AudioHandle a = new Audio("res/sounds/fast.wav");
+				a.start();
+			}
+			else if (type==ItemType.USER_SLOW)
+			{
+				AudioHandle a = new Audio("res/sounds/slow.wav");
+				a.start();
+				
+			}*/
+			remainingTime = type.duration;
+			snake.currentItems.offer(this);	
 		}
 		
 		// item individuel visant les joueurs autres que le ramasseur
