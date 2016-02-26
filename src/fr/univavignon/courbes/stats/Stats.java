@@ -13,7 +13,7 @@ import fr.univavignon.courbes.inter.simpleimpl.profiles.ProfileManager;
  * Modèle associé à la table affichant la liste des stats
  * (i.e. objet chargé de gérer le contenu la table concernée).
  * 
- * @author	L3 Info UAPV 2015-16
+ * @author	Mary L3 Info UAPV 2015-16
  */
 public class Stats extends AbstractTableModel
 {

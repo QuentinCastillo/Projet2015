@@ -45,7 +45,6 @@ public class Profile implements Serializable, Comparable<Profile>
 	/** Rang ELO du profil relativement à toutes les parties qu'il a jouées */
 	public int eloRank;
 	
-	// Rajouter les variables stats ici :
 	public int partyNumber;
 	public int partyWon;
 	public int partyLost;
