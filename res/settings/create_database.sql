@@ -1,0 +1,42 @@
+CREATE TABLE player(
+  id SERIAL PRIMARY KEY,
+  name VARCHAR(50),
+  pwd VARCHAR(50),
+);
+
+CREATE TABLE elo(
+  id SERIAL PRIMARY KEY,
+  _date TIMESTAMP,
+  value INTEGER
+);
+
+CREATE TABLE gameCount(
+  id SERIAL PRIMARY KEY,
+  _date TIMESTAMP,
+  value INTEGER
+);
+
+
+CREATE TABLE gameWon(
+  id SERIAL PRIMARY KEY,
+  _date TIMESTAMP,
+  value INTEGER
+);
+
+CREATE TABLE pointByGame(
+  id SERIAL PRIMARY KEY,
+  _date TIMESTAMP,
+  value INTEGER
+);
+
+CREATE TABLE roundCount(
+  id SERIAL PRIMARY KEY,
+  _date TIMESTAMP,
+  value INTEGER
+);
+
+CREATE TABLE pointByRound(
+  id SERIAL PRIMARY KEY,
+  _date TIMESTAMP,
+  value INTEGER
+);
