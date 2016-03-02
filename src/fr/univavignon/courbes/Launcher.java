@@ -47,9 +47,9 @@ public class Launcher extends JFrame
 	 */
 	public static void main(String[] args) throws Exception
 	{	
-		
-		AudioHandle son = new Audio("res/sounds/test.wav");
-		son.start();
+		Audio a = new Audio();
+		AudioHandle son = new Audio();
+		son.IntroSong();
 		
 		
 		// on charge les options du jeu qui avaient été stockées dans un fichier texte

@@ -4,6 +4,7 @@ import  java.io.*;
 import javax.sound.sampled.*;
  
  
+/** @author Quentin Castillo **/
 public class Audio extends Thread implements AudioHandle{
      
      
@@ -11,8 +12,48 @@ public class Audio extends Thread implements AudioHandle{
     SourceDataLine line;
     String name;
     
-    public Audio(String name){
-    	this.name = name;
+    public Audio(){
+    	// null
+    }
+    
+
+    
+    public void CollisionSound()
+    {
+    	this.name = "res/sounds/collision.wav";
+    	start();
+    	
+    }
+    
+    public void MusicInGame()
+    {
+    	this.name = "res/sounds/music.wav";
+    	start();
+
+    }
+    
+    public void ItemCreated()
+    {
+    	this.name = "res/sounds/pop.wav";
+    	start();
+    }
+    
+    public void ItemCollision()
+    {
+    	this.name = "res/sounds/item.wav";
+    	start();
+    }
+    
+    public void IntroSong()
+    {
+    	this.name = "res/sounds/intro.wav";
+    	start();
+    }
+    
+    public void Button()
+    {
+    	this.name = "res/sounds/button.wav";
+    	start();
     }
     
     public void run(){
@@ -53,7 +94,6 @@ public class Audio extends Thread implements AudioHandle{
                     return;
         }
         line.start();
-        //Fenetre.begin=true;
         try {
             byte bytes[] = new byte[1024];
             int bytesRead=0;

@@ -66,11 +66,12 @@ public class PhysItemInstance extends ItemInstance
 	 * 		Position en ordonnée.
 	 */
 	public PhysItemInstance(int x, int y)
-	{	// tirage au sort du type d'item
+	{	
+		AudioHandle a = new Audio();
+		a.ItemCreated();
+		// tirage au sort du type d'item
 		int idx = RANDOM.nextInt(ItemType.values().length);
 		ItemType type = ItemType.values()[idx];
-		AudioHandle a = new Audio("res/sounds/pop.wav");
-		a.start();
 		// on finit l'init
 		init(type,x,y);
 	}

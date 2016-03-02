@@ -37,6 +37,8 @@ import fr.univavignon.courbes.inter.simpleimpl.MainWindow;
 import fr.univavignon.courbes.inter.simpleimpl.local.KeyManager;
 import fr.univavignon.courbes.physics.PhysicsEngine;
 import fr.univavignon.courbes.physics.simpleimpl.PhysicsEngineImpl;
+import fr.univavignon.courbes.sounds.Audio;
+import fr.univavignon.courbes.sounds.AudioHandle;
 
 /**
  * Panel utilisé pour afficher le jeu proprement dit,
@@ -67,9 +69,14 @@ public abstract class AbstractRoundPanel extends JPanel implements Runnable
 	public AbstractRoundPanel(MainWindow mainWindow)
 	{	super();
 		
+		AudioHandle a = new Audio();
+		a.MusicInGame();
+	
 		this.mainWindow = mainWindow;
 		init();
 		start();
+		
+		
 	}
 	
 	/** Fenêtre principale du jeu */

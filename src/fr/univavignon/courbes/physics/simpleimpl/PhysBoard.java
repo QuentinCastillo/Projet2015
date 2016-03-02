@@ -50,19 +50,12 @@ public class PhysBoard extends Board
 	private static final long serialVersionUID = 1L;
 	/** Générateur aléatoire utilisé lors de l'apparition d'items */
 	private static final Random RANDOM = new Random();
-	/** Permet de mettre le son qu'une seule fois	 **/
-	private static boolean firstTime=false;
 	/**
 	 * Crée une nouvelle aire de jeu, à initialiser ensuite.
 	 */
 	public PhysBoard()
 	{	
-		
-		if(!firstTime){
-			AudioHandle a = new Audio("res/sounds/music.wav");
-			a.start();
-			firstTime = true;
-		}
+	
 		
 		items = new ArrayList<ItemInstance>();
 		currentItems = new LinkedList<PhysItemInstance>();
@@ -340,6 +333,8 @@ public class PhysBoard extends Board
 			snake.oldTrail.clear();
 			snake.clearedTrail = true;
 		}
+		
+		
 	}
 	
 	/**
