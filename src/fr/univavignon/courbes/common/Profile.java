@@ -45,11 +45,20 @@ public class Profile implements Serializable, Comparable<Profile>
 	/** Rang ELO du profil relativement à toutes les parties qu'il a jouées */
 	public int eloRank;
 	
-	public int partyNumber;
-	public int partyWon;
-	public int partyLost;
-	public int pointInParty;
-	public int pointInRound;
+	/** Nombre de parties jouées */
+	public int gameCount;
+	
+	/** Nombre de parties gagnées */
+	public int gameWon;		
+	
+	/**Nombre de points marquées par partie */
+	public int pointInGame;
+	
+	/** nombre de point par manche */
+	public int pointByRound;
+	
+	/** nombre de points par partie */
+	public int pointByGame;
 	
 		
 	////////////////////////////////////////////////////////////////

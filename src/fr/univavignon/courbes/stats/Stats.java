@@ -44,9 +44,8 @@ public class Stats extends AbstractTableModel
 		{	List<String> row = new ArrayList<String>();
 			row.add(Integer.toString(profile.eloRank));
 			row.add(profile.userName);
-			row.add(Integer.toString(profile.partyNumber));
-			row.add(Integer.toString(profile.partyWon));
-			row.add(Integer.toString(profile.partyLost));
+			row.add(Integer.toString(profile.gameCount));
+			row.add(Integer.toString(profile.gameWon));
 			rowdata.add(row);
 		}
 	}
@@ -61,10 +60,7 @@ public class Stats extends AbstractTableModel
 	{	ArrayList<String> newRow = new ArrayList<String>();
 		newRow.add(Integer.toString(profile.eloRank));
 		newRow.add(profile.userName);
-		newRow.add(Integer.toString(profile.partyNumber));
-		newRow.add(Integer.toString(profile.partyWon));
-		newRow.add(Integer.toString(profile.partyLost));
-		
+		newRow.add(Integer.toString(profile.gameCount));
 		rowdata.add(newRow);
 		fireTableRowsInserted(rowdata.size()-1, rowdata.size()-1);
 	}
