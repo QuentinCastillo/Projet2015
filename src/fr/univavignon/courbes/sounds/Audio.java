@@ -58,14 +58,7 @@ public class Audio extends Thread implements AudioHandle{
     
     public void run(){
         File fichier = new File(name);
-        try {
-        AudioFileFormat format = AudioSystem.getAudioFileFormat(fichier);
-        } catch (UnsupportedAudioFileException e1) {
-            e1.printStackTrace();
-        } catch (IOException e1) {
-            e1.printStackTrace();
-        }
-         
+
         try {
             audioInputStream = AudioSystem.getAudioInputStream(fichier);
         } catch (UnsupportedAudioFileException e) {
