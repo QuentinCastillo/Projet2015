@@ -47,7 +47,6 @@ public class Launcher extends JFrame
 	 */
 	public static void main(String[] args) throws Exception
 	{	
-		Audio a = new Audio();
 		AudioHandle son = new Audio();
 		son.IntroSong();
 		

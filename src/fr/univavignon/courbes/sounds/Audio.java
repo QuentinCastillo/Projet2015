@@ -27,7 +27,7 @@ public class Audio extends Thread implements AudioHandle{
     
     public void MusicInGame()
     {
-    	this.name = "res/sounds/music.wav";
+    	this.name = "res/sounds/music2.wav";
     	start();
 
     }
@@ -48,6 +48,10 @@ public class Audio extends Thread implements AudioHandle{
     {
     	this.name = "res/sounds/intro.wav";
     	start();
+    }
+    
+    public void Terminate(){
+    	this.stop();
     }
     
     public void Button()
@@ -78,7 +82,7 @@ public class Audio extends Thread implements AudioHandle{
                return;
              }
          
-         
+        
           
         try {
                 line.open(audioFormat);

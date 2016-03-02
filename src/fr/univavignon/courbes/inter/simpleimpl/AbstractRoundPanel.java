@@ -69,9 +69,8 @@ public abstract class AbstractRoundPanel extends JPanel implements Runnable
 	public AbstractRoundPanel(MainWindow mainWindow)
 	{	super();
 		
-		AudioHandle a = new Audio();
-		a.MusicInGame();
-	
+
+		
 		this.mainWindow = mainWindow;
 		init();
 		start();
@@ -141,7 +140,11 @@ public abstract class AbstractRoundPanel extends JPanel implements Runnable
 	 * Effectue la partie tout entière, i.e. plusieurs manches.
 	 */
 	protected void playMatch()
-	{	totalPoints = new int[round.players.length];
+	{	
+		AudioHandle a = new Audio();
+		a.MusicInGame();
+		
+		totalPoints = new int[round.players.length];
 		Arrays.fill(totalPoints, 0);
 
 		do
@@ -183,6 +186,7 @@ public abstract class AbstractRoundPanel extends JPanel implements Runnable
 			}
 		}
 		while(!matchOver);
+		a.Terminate();
 	}
 	
 	/**

@@ -18,4 +18,7 @@ public interface AudioHandle {
 	public void CollisionSound();
 	/** Son lorsqu'on appuie sur un bouton **/
 	public void Button();
+	
+	/** Interrompre musique **/
+	public void Terminate();
 }
