@@ -16,7 +16,6 @@ CREATE TABLE gameCount(
   value INTEGER
 );
 
-
 CREATE TABLE gameWon(
   id SERIAL PRIMARY KEY,
   _date TIMESTAMP,
