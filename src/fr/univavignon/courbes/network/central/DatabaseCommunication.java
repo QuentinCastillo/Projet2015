@@ -4,6 +4,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Timestamp;
 
 /**
@@ -37,7 +38,12 @@ public static void connect_db()
 
   }
 
-  public static void insert_player(String name, String pwd)
+  /**
+ * @param name
+ * @param pwd
+ * @throws SQLException 
+ */
+public static void insert_new_player(String name, String pwd) throws SQLException
   {
 	  String query = "INSERT INTO ?(name, pwd) values(?,?) RETURNING playerid";
 	  PreparedStatement state; 
@@ -60,9 +66,20 @@ public static void connect_db()
 		  
 		  state.setString(1, s);
 		  state.setInt(2, playerId);
-		  state.setTimestamp(3, x);
+		  state.setTimestamp(3, getCurrentTimeStamp());
 		  state.setInt(4, 0);
 	  }
 	  
   }
+
+/**
+ * @return The current Time
+ */
+private static java.sql.Timestamp getCurrentTimeStamp() {
+
+	java.util.Date today = new java.util.Date();
+	return new java.sql.Timestamp(today.getTime());
+
+}
+
 }
