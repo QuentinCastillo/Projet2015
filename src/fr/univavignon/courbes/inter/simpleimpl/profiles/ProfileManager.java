@@ -109,9 +109,10 @@ public class ProfileManager
 	private static void loadProfiles()
 	{	try
 		{
-			DatabaseCommunication.getProfiles();
+		
+		DatabaseCommunication.getProfile();
 
-			// int profileId = 0;
+			//	int profileId = 0;
 			// // on en lit chaque ligne
 			// while(scanner.hasNext())
 			// {	String line = scanner.nextLine();
@@ -132,7 +133,6 @@ public class ProfileManager
 			//
 			// 	profileId++;
 			// }
-
 			// on ferme le fichier
 			// scanner.close();
 		}

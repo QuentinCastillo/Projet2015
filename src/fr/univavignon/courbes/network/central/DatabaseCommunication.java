@@ -152,7 +152,6 @@ public static int getProfileNumber() throws SQLException
 
     ResultSetMetaData resultMeta = result.getMetaData();
 
-
     return resultMeta.getColumnCount();
 }
 
