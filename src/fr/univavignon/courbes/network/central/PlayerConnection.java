@@ -55,8 +55,8 @@ public class PlayerConnection {
     
     public static boolean addPlayer(Profile profil)
     {
-          String query="Insert into player(id,pseudo,country,pswd)";
-          query+=" values(default,?,?,?) RETURNING id_player";
+          String query="Insert into player_waiting(id,pseudo,country,pswd)";
+          query+=" values(default,?,?,?) RETURNING id";
           PreparedStatement prepare;
           Connection connection = connect();
           if(connection != null)
