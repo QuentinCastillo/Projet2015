@@ -5,14 +5,17 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import fr.univavignon.courbes.network.central.PlayerConnection;
+import fr.univavignon.courbes.inter.simpleimpl.SettingsManager;
 
 public class PublicGameConnection {
+	
+	public static InetAddress Ip=null;
+	
 	public static void createPublicGame()
     {
         String query="Insert into publicGame(IP, nb_joueurs, nb_joueurs_max) values(?, 1, 6)";
         PreparedStatement prepare;
         Connection connection = PlayerConnection.connect();
-        InetAddress Ip=null;
         try
         {
         	Ip = InetAddress.getLocalHost();
@@ -38,16 +41,23 @@ public class PublicGameConnection {
 		Connection connection = PlayerConnection.connect();
 		String query="Select * from partie where nb_players<nb_max_players";
 		if(connection != null) {
-            try {
-                PreparedStatement prepare = connection.prepareStatement(query);
-                ResultSet result = prepare.executeQuery();
-                while(result.next())
-        		{
-        			
-        		}
-            } catch (SQLException e) {
-                // TODO Auto-generated catch block
-            }
+			while(true)
+			{
+	            try {
+	                PreparedStatement prepare = connection.prepareStatement(query);
+	                ResultSet result = prepare.executeQuery();
+	                while(result.next())
+	        		{
+	        			SettingsManager.setLastServerIp(Ip.getHostAddress());
+	        		}
+	            } catch (SQLException e) {
+	                // TODO Auto-generated catch block
+	            }
+	            if(SettingsManager.getLastServerIp()!="localhost")
+	            {
+	            	break;
+	            }
+			}
         }
 	}
 }
