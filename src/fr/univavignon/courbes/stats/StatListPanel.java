@@ -27,13 +27,17 @@ import fr.univavignon.courbes.inter.simpleimpl.SettingsManager;
 
 
 /*
-* Panel destiné à afficher la liste des profils existants.
+* Panel destiné à afficher la liste des stats des profils existants.
 * 
 * @author	Mary L3 Info UAPV 2015-16
 */
 public class StatListPanel extends JPanel implements ActionListener
 {	/** Numéro de série de la classe */
 	private static final long serialVersionUID = 1L;
+	/** Nom par défaut pour le champ texte */
+	private static final String DEFAULT_NAME = "Nom";
+	/** Pays par défaut pour le champ texte */
+	private static final String DEFAULT_COUNTRY = "Pays";
 
 	
 	/**

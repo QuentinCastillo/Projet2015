@@ -31,12 +31,13 @@ public class Stats extends AbstractTableModel
 		rowdata = new ArrayList<List<String>>();
 
 		// on définit les titres des colonnes
-		columnNames = new String[4];
+		columnNames = new String[6];
 		columnNames[0] = "Rang ELO";
 		columnNames[1] = "Nom";
 		columnNames[2] = "Nombre de parties jouées";
 		columnNames[3] = "Nombre de parties gagnées";
-		columnNames[4] = "Nombre de parties perdues";
+		columnNames[4] = "Nombre de points dans une partie";
+		columnNames[5] = "Choix";
 		
 		// on définit le contenu de la table
 		TreeSet<Profile> profiles = ProfileManager.getProfiles();
@@ -46,6 +47,8 @@ public class Stats extends AbstractTableModel
 			row.add(profile.userName);
 			row.add(Integer.toString(profile.gameCount));
 			row.add(Integer.toString(profile.gameWon));
+			row.add(Integer.toString(profile.pointInGame));
+		//	row.add(Integer.toString(profile.pointInGame));
 			rowdata.add(row);
 		}
 	}
@@ -61,6 +64,7 @@ public class Stats extends AbstractTableModel
 		newRow.add(Integer.toString(profile.eloRank));
 		newRow.add(profile.userName);
 		newRow.add(Integer.toString(profile.gameCount));
+		newRow.add(Integer.toString(profile.gameWon));
 		rowdata.add(newRow);
 		fireTableRowsInserted(rowdata.size()-1, rowdata.size()-1);
 	}
@@ -83,6 +87,10 @@ public class Stats extends AbstractTableModel
 	public Object getValueAt(int rowIndex, int columnIndex) 
 	{
 		return rowdata.get(rowIndex).get(columnIndex);
+	}
+	
+	public String getColumnName(int c)
+	{	return columnNames[c];
 	}
 	
 }

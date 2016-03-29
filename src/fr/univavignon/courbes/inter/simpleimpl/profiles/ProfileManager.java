@@ -103,8 +103,6 @@ public class ProfileManager
 					profile.country + SEPARATOR +
 					profile.eloRank + SEPARATOR +
 					profile.email + SEPARATOR +
-					profile.partyNumber + SEPARATOR + 
-					profile.partyWon + SEPARATOR +
 					profile.password + "\n"
 				);
 			}
