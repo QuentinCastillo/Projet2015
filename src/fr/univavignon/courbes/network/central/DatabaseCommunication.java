@@ -73,26 +73,25 @@ public static Profile insert_new_player(String name, String pwd, String country,
 
 		Profile new_profile = new Profile();
 
-		query = "INSERT INTO ?(id, _date, value) values(cast(? as integer),cast(? as Timestamp),cast(? as integer))";
+		query = "INSERT INTO elo(id, _date, value) values(cast(? as integer),cast(? as Timestamp),cast(? as integer))";
 		state = conn.prepareStatement(query);
 
-		state.setString(1, "elo");
-		state.setInt(2, playerId);
-		state.setTimestamp(3, getCurrentTimeStamp());
-		state.setInt(4, new_profile.eloRank);
-		state.executeQuery();
+		state.setInt(1, playerId);
+		state.setTimestamp(2, getCurrentTimeStamp());
+		state.setInt(3, new_profile.eloRank);
+		state.executeUpdate();
 		state.close();
 
 		String[] tables = {"gamecount", "gamewon", "pointbygame", "pointbyround", "roundcount"};
 	  for(String s : tables)
 	  {
+		  query = "INSERT INTO " + s + "(id, _date, value) values(cast(? as integer),cast(? as Timestamp),cast(? as integer))";
 		  state = conn.prepareStatement(query);
 
-		  state.setString(1, s);
-		  state.setInt(2, playerId);
-		  state.setTimestamp(3, getCurrentTimeStamp());
-		  state.setInt(4, 0);
-		  state.executeQuery();
+		  state.setInt(1, playerId);
+		  state.setTimestamp(2, getCurrentTimeStamp());
+		  state.setInt(3, 0);
+		  state.executeUpdate();
 		  state.close();
 	  }
 

@@ -24,6 +24,7 @@ import javax.swing.UIManager.LookAndFeelInfo;
 
 import fr.univavignon.courbes.inter.simpleimpl.MainWindow;
 import fr.univavignon.courbes.inter.simpleimpl.SettingsManager;
+import fr.univavignon.courbes.network.central.DatabaseCommunication;
 
 /**
  * Classe principale chargée du lancement du jeu.
@@ -49,6 +50,9 @@ public class Launcher extends JFrame
 		
 		// on change le look'n'feel Java
 		setLookAndFeel();
+		
+		//On lance la connection avec la base de données
+		DatabaseCommunication.connect_db();
 		
 		// on crée la fenêtre principale, qui lance le jeu
 		new MainWindow();

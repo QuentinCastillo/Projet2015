@@ -120,7 +120,6 @@ public class MainWindow extends JFrame implements ErrorHandler, WindowListener
 		addWindowListener(this);
 		setVisible(true);
 		
-		DatabaseCommunication.connect_db();
 	}
 	
 	/**
