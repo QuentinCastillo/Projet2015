@@ -135,7 +135,7 @@ public class ClientGamePlayerSelectionPanel extends AbstractLocalPlayerSelection
 			// connexion via le central
 			else
 			{	
-				mainWindow.displayPanel(PanelName.CENTRAL_CONNECTION);
+				mainWindow.displayPanel(PanelName.CLIENT_CENTRAL_CONNECTION);
 			}
 		}
 		else

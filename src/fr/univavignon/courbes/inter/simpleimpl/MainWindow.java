@@ -167,8 +167,8 @@ public class MainWindow extends JFrame implements ErrorHandler, WindowListener
 		/** Aire de jeu d'une partie réseau côté client */
 		CLIENT_GAME_PLAY,
 		
-		/** Connexion serveur central */
-		CENTRAL_CONNECTION,
+		/** Connexion du client au serveur central */
+		CLIENT_CENTRAL_CONNECTION,
 		
 		/** Liste des profils */
 		PROFILE_LIST,
@@ -229,7 +229,7 @@ public class MainWindow extends JFrame implements ErrorHandler, WindowListener
 				((ClientGameRoundPanel)currentPanel).start();
 				break;
 				
-			case CENTRAL_CONNECTION:
+			case CLIENT_CENTRAL_CONNECTION:
 				currentPanel= new CentralPanel(this);
 			// profils
 			case PROFILE_LIST:

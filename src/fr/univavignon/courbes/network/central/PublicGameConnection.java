@@ -46,7 +46,7 @@ public class PublicGameConnection {
 	            try {
 	                PreparedStatement prepare = connection.prepareStatement(query);
 	                ResultSet result = prepare.executeQuery();
-	                while(result.next())
+	                if(result.next())
 	        		{
 	        			SettingsManager.setLastServerIp(Ip.getHostAddress());
 	        		}
