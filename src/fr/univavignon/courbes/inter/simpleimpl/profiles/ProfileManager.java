@@ -131,6 +131,7 @@ public class ProfileManager
 		try {
 			Profile profile;
 			profile = DatabaseCommunication.getProfile(profileId);
+			System.out.println(profileId + " " + profile);
 			if(profile != null)
 			{
 				profile.changed = false;

@@ -267,7 +267,7 @@ public static Profile getProfile(int playerid) throws SQLException
  */
 public static int getProfileNumber() throws SQLException
 {
-	PreparedStatement state = conn.prepareStatement("SELECT count(id) AS count FROM player;");
+	PreparedStatement state = conn.prepareStatement("SELECT max(id) AS count FROM player;");
 	ResultSet result = state.executeQuery();
 	result.next();
     int count = result.getInt("count");
