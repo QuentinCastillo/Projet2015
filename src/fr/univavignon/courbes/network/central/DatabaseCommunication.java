@@ -11,7 +11,7 @@ import fr.univavignon.courbes.inter.simpleimpl.profiles.ProfileManager;
 
 
 /**
- * @author gael
+ * @author gael et mary
  * Cette classe gère la communication avec la base de données située sur
  * l'espace personnel uapv1402562
  */
@@ -189,7 +189,7 @@ public static Profile getProfile(int playerid) throws SQLException
 	  profile.country = result.getString("country");
 	  
 	  //2) Ensuite on recupere le rang ELO
-	  String query2 = "SELECT TOP 1 ? FROM ? WHERE id = playerid ORDER BY date DESC";
+	 /* String query2 = "SELECT TOP 1 ? FROM ? WHERE id = playerid ORDER BY date DESC";
 	  PreparedStatement state2;
 	  state2 = conn.prepareStatement(query2);
 	  state2.setString(1,"value");
@@ -247,7 +247,7 @@ public static Profile getProfile(int playerid) throws SQLException
 	  ResultSet result7 = state7.executeQuery();
 	  
 	  profile.pointByGame = result7.getInt("value");
-	  
+	  */
 	return profile;
 }
 
