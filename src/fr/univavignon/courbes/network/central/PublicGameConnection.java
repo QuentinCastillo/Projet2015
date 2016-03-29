@@ -39,7 +39,7 @@ public class PublicGameConnection {
 	public static void joinPublicGame()
 	{
 		Connection connection = PlayerConnection.connect();
-		String query="Select * from partie where nb_players<nb_max_players";
+		String query="Select ip from partie where nb_players<nb_max_players";
 		if(connection != null) {
 			while(true)
 			{

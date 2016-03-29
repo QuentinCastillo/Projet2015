@@ -34,7 +34,6 @@ import javax.swing.JPanel;
 
 import fr.univavignon.courbes.inter.simpleimpl.MainWindow.PanelName;
 import fr.univavignon.courbes.inter.simpleimpl.profiles.ProfileManager;
-import fr.univavignon.courbes.network.central.PublicGameConnection;
 
 /**
  * Panel contenant le menu principal du jeu.
@@ -170,14 +169,7 @@ public class MainMenuPanel extends JPanel implements ActionListener
 		else if(e.getSource()==clientGameButton)
 		{	if (ProfileManager.getProfiles().size() > 0)
 			{	
-				//mainWindow.displayPanel(PanelName.CLIENT_GAME_PLAYER_SELECTION);
-				
-				PublicGameConnection.joinPublicGame();
-				
-				JOptionPane.showMessageDialog
-				(	mainWindow,
-					"<html><b>TEST REUSSI</b></html>"
-				);
+				mainWindow.displayPanel(PanelName.CLIENT_GAME_PLAYER_SELECTION);
 			}
 			else
 			{	JOptionPane.showMessageDialog
