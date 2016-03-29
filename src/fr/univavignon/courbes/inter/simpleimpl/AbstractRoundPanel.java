@@ -144,8 +144,11 @@ public abstract class AbstractRoundPanel extends JPanel implements Runnable
 			// on met à jour les score totaux
 			Player[] players = round.players;
 			for(int i=0;i<players.length;i++)
+			{
 				totalPoints[i] = players[i].totalScore;
-
+				Profile profile = players[i].profile; // On selectionne le profil de tous les joueurs
+				profile.gameCount++; 	// On rajoute +1 à la var gameCount
+			}
 			// on compare le score le plus élevé et la limite
 			int maxIdx = 0;
 			for(int i=0;i<totalPoints.length;i++)
@@ -159,6 +162,8 @@ public abstract class AbstractRoundPanel extends JPanel implements Runnable
 			{	Profile profile = players[maxIdx].profile;
 				String name = profile.userName;
 				JOptionPane.showMessageDialog(mainWindow, "Le joueur "+name+"a gagné la partie !");
+				profile.gameWon++; // On ajoute +1 au nombre de partie gragnée
+				profile.pointByGame = players[maxIdx].totalScore; // On stocke le score totale dans point by game
 			}
 			
 			// ou bien celui de la manche, et on recommence
@@ -171,7 +176,7 @@ public abstract class AbstractRoundPanel extends JPanel implements Runnable
 				Profile profile = players[maxIdx2].profile;
 				String name = profile.userName;
 				JOptionPane.showMessageDialog(mainWindow, "Le joueur "+name+" a gagné la manche !");
-				
+				profile.pointByRound = players[maxIdx2].roundScore; // On stocke le score de la manche dans pointByRound
 				resetRound();
 			}
 		}

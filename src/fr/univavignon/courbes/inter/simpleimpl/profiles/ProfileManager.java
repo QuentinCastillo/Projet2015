@@ -91,6 +91,7 @@ public class ProfileManager
 	private static void recordProfiles()
 	{
 		// //TODO: Figure out how to do this with mary
+		// for(Profile profile: PROFILES)
 		// 		(	profile.userName + SEPARATOR +
 		// 			profile.country + SEPARATOR +
 		// 			profile.eloRank + SEPARATOR +
