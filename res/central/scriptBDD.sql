@@ -2,7 +2,7 @@ Drop table partie;
 
 Create table partie
 (
-	ip DECIMAL(16,9);
+	ip VARCHAR(20);
 	nb_players INT;
 	nb_max_players INT;
 )
