@@ -3,17 +3,17 @@ package fr.univavignon.courbes.inter.simpleimpl.profiles;
 /*
  * Courbes
  * Copyright 2015-16 L3 Info UAPV 2015-16
- * 
+ *
  * This file is part of Courbes.
- * 
- * Courbes is free software: you can redistribute it and/or modify it under the terms 
- * of the GNU General Public License as published by the Free Software Foundation, 
+ *
+ * Courbes is free software: you can redistribute it and/or modify it under the terms
+ * of the GNU General Public License as published by the Free Software Foundation,
  * either version 2 of the License, or (at your option) any later version.
- * 
- * Courbes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; 
- * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
+ *
+ * Courbes is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY;
+ * without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
  * PURPOSE. See the GNU General Public License for more details.
- * 
+ *
  * You should have received a copy of the GNU General Public License
  * along with Courbes. If not, see <http://www.gnu.org/licenses/>.
  */
@@ -24,6 +24,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -40,10 +41,11 @@ import fr.univavignon.courbes.common.Profile;
 import fr.univavignon.courbes.inter.simpleimpl.MainWindow;
 import fr.univavignon.courbes.inter.simpleimpl.MainWindow.PanelName;
 import fr.univavignon.courbes.inter.simpleimpl.SettingsManager;
+import fr.univavignon.courbes.network.central.DatabaseCommunication;
 
 /**
  * Panel destiné à afficher la liste des profils existants.
- * 
+ *
  * @author	L3 Info UAPV 2015-16
  */
 public class ProfileListPanel extends JPanel implements ActionListener, FocusListener
@@ -53,61 +55,69 @@ public class ProfileListPanel extends JPanel implements ActionListener, FocusLis
 	private static final String DEFAULT_NAME = "Nom";
 	/** Pays par défaut pour le champ texte */
 	private static final String DEFAULT_COUNTRY = "Pays";
-	
+	/** email par défaut pour le champ texte */
+	private static final String DEFAULT_EMAIL = "example@toto.com";
+	/** Mot de passe par défaut pour le champ texte */
+	private static final String DEFAULT_PASSWORD = "password";
+
 	/**
 	 * Crée un nouveau panel destiné à afficher la liste des profils.
-	 * 
+	 *
 	 * @param mainWindow
 	 * 		Fenêtre principale contenant ce panel.
 	 */
 	public ProfileListPanel(MainWindow mainWindow)
 	{	super();
 		this.mainWindow = mainWindow;
-		
+
 		init();
 	}
-	
+
 	/** Fenêtre contenant ce panel */
 	private MainWindow mainWindow;
 	/** Table affichée par ce panel */
 	private JTable playerTable;
 	/** Scrollpane contenu dans ce panel pour afficher la table */
-	private JScrollPane scrollPane; 
+	private JScrollPane scrollPane;
 	/** Champ texte contenant le nom d'un nouveau profil */
 	private JTextField nameField;
 	/** Champ texte contenant le pays d'un nouveau profil */
 	private JTextField countryField;
+	/** Champ texte contenant le mot de passe d'un nouveau profil */
+	private JTextField passwordField;
+	/** Champ texte contenant l'email d'un nouveau profil */
+	private JTextField emailField;
 	/** Bouton pour revenir au menu principal */
 	private JButton backButton;
 	/** Bouton pour ajouter le nouveau profil */
 	private JButton addButton;
 	/** Bouton pour supprimer le profil sélectionné */
 	private JButton removeButton;
-	
+
 	/**
 	 * Méthode principale d'initialisation du panel.
 	 */
 	private void init()
 	{	BoxLayout layout = new BoxLayout(this, BoxLayout.PAGE_AXIS);
 		setLayout(layout);
-	
+
 		initTablePanel();
-		
+
 		add(Box.createVerticalGlue());
-		
+
 		initTextFields();
 		initButtonsPanel();
 	}
-	
+
 	/**
 	 * Initialisation de la table affichée par ce panel.
 	 */
 	private void initTablePanel()
 	{	playerTable = new JTable();
 		playerTable.setAutoCreateRowSorter(true);
-		
+
 		playerTable.setModel(new ProfileTableModel());
-		
+
 		scrollPane = new JScrollPane
 		(	playerTable,
 			JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -123,17 +133,17 @@ public class ProfileListPanel extends JPanel implements ActionListener, FocusLis
 		scrollPane.setMinimumSize(dim);
 		add(scrollPane);
 	}
-	
+
 	/**
 	 * Initialisation des champs texte contenus dans ce panel.
 	 */
 	private void initTextFields()
 	{	JLabel newPlayerLabel = new JLabel("Nouveau profil");
 		add(newPlayerLabel);
-		
+
 		Dimension frameDim = mainWindow.getPreferredSize();
 		Dimension dim = new Dimension(frameDim.width,30);
-		
+
 		nameField = new JTextField(DEFAULT_NAME);
 		nameField.addFocusListener(this);
 		nameField.setPreferredSize(dim);
@@ -147,8 +157,22 @@ public class ProfileListPanel extends JPanel implements ActionListener, FocusLis
 		countryField.setMaximumSize(dim);
 		countryField.setMinimumSize(dim);
 		add(countryField);
+
+		passwordField = new JTextField(DEFAULT_PASSWORD);
+		passwordField.addFocusListener(this);
+		passwordField.setPreferredSize(dim);
+		passwordField.setMaximumSize(dim);
+		passwordField.setMinimumSize(dim);
+		add(passwordField);
+
+		emailField = new JTextField(DEFAULT_EMAIL);
+		emailField.addFocusListener(this);
+		emailField.setPreferredSize(dim);
+		emailField.setMaximumSize(dim);
+		emailField.setMinimumSize(dim);
+		add(emailField);
 	}
-	
+
 	/**
 	 * Initialisation des boutons contenus dans ce panel.
 	 */
@@ -156,74 +180,80 @@ public class ProfileListPanel extends JPanel implements ActionListener, FocusLis
 	{	JPanel panel = new JPanel();
 		BoxLayout layout = new BoxLayout(panel, BoxLayout.LINE_AXIS);
 		panel.setLayout(layout);
-		
+
 		backButton = new JButton("Retour");
 		backButton.addActionListener(this);
 		panel.add(backButton);
-		
+
 		panel.add(Box.createHorizontalGlue());
-		
+
 		removeButton = new JButton("Supprimer");
 		removeButton.addActionListener(this);
 		panel.add(removeButton);
-		
+
 		panel.add(Box.createHorizontalGlue());
-		
+
 		addButton = new JButton("Ajouter");
 		addButton.addActionListener(this);
 		panel.add(addButton);
-		
+
 		add(panel);
 	}
-	
+
 	/**
 	 * Validation de l'ajout d'un nouveau profil.
 	 */
 	private void addPlayer()
 	{	String userName = nameField.getText();
 		String country = countryField.getText();
+		String email = emailField.getText();
+		String password = passwordField.getText();
 
 		// on vérifie que les champs ont été remplis, et que le nom n'est pas déjà pris
 		if(!userName.isEmpty() && !country.isEmpty() && !ProfileManager.containsUserName(userName))
-		{	// on crée le profil
+		{
+			//On ajoute le profil via insert_new_player
+
 			Profile profile = new Profile();
-			profile.userName = userName;
-			profile.country = country;
-			profile.eloRank = ProfileManager.getProfiles().size()+1;
-			
-			// on le rajoute à la liste
-			ProfileManager.addProfile(profile);
-			
+			try {
+				profile = DatabaseCommunication.insert_new_player(userName, password, country, email);
+			} catch (SQLException e) {
+
+				e.printStackTrace();
+			}
+
 			// on le rajoute dans la table
 			ProfileTableModel model = (ProfileTableModel) playerTable.getModel();
 			model.addProfile(profile);
-			
+
 			// on réinitialise les champs texte
 			nameField.setText(DEFAULT_NAME);
 			countryField.setText(DEFAULT_COUNTRY);
+			passwordField.setText(DEFAULT_PASSWORD);
+			emailField.setText(DEFAULT_EMAIL);
 		}
 	}
-	
+
 	/**
 	 * Suppression d'un profil existant.
 	 */
 	private void removePlayer()
 	{	int selected = playerTable.getSelectedRow();
-		
+
 		if(selected>=0)
 		{	// on récupère le profil
 			List<Profile> profiles = new ArrayList<Profile>(ProfileManager.getProfiles());
 			Profile profile = profiles.get(selected);
-			
+
 			// on supprime le profil de la liste
 			ProfileManager.removeProfile(profile);
-			
+
 			// on le supprime de la table
 			ProfileTableModel model = (ProfileTableModel) playerTable.getModel();
 			model.removeProfile(selected);
 		}
 	}
-	
+
 	@Override
 	public void focusGained(FocusEvent e)
 	{	if(e.getSource()==nameField)
