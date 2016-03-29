@@ -68,13 +68,11 @@ public class StatListPanel extends JPanel implements ActionListener
 	 * Méthode principale d'initialisation du panel.
 	 */
 	private void init()
-	{	BoxLayout layout = new BoxLayout(this, BoxLayout.PAGE_AXIS);
+	{
+		BoxLayout layout = new BoxLayout(this, BoxLayout.PAGE_AXIS);
 		setLayout(layout);
-
 		initTablePanel();
-
 		add(Box.createVerticalGlue());
-
 		initButtonsPanel();
 	}
 

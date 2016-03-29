@@ -1,6 +1,7 @@
 package fr.univavignon.courbes.stats;
 
 import java.awt.event.KeyEvent;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.TreeSet;
@@ -49,18 +50,25 @@ public class Stats extends AbstractTableModel
 
 		// on définit le contenu de la table
 		TreeSet<Profile> profiles = ProfileManager.getProfiles();
-		int profileCount = DatabaseCommunication.getProfileNumber();
+		int profileCount = 0;
+		try {
+			profileCount = DatabaseCommunication.getProfileNumber();
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		JCheckBox[] checkBoxList = new JCheckBox[profileCount];
 		int i = 0;
 		for (Profile profile : profiles)
-		{	List<Object> row = new ArrayList<Object>();
+		{	
+			List<Object> row = new ArrayList<Object>();
 			row.add(Integer.toString(profile.eloRank));
 			row.add(profile.userName);
 			row.add(Integer.toString(profile.gameCount));
 			row.add(Integer.toString(profile.gameWon));
 			row.add(Integer.toString(profile.pointByGame));
-			checkBoxList[i] = new JCheckBox("player" + profile.profileId);
-			row.add(checkBoxList[i]);
+			// checkBoxList[i] = new JCheckBox("player" + profile.profileId);
+			// row.add(checkBoxList[i]);
 			rowdata.add(row);
 			i++;
 		}

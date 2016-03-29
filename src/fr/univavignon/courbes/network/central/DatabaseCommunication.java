@@ -49,28 +49,31 @@ public static void connect_db()
  * @param pwd player's password
  * @param country player's country
  * @param email player's email
+ * @return
  * @throws SQLException //TODO: handle this
  */
 public static Profile insert_new_player(String name, String pwd, String country, String email) throws SQLException
   {
-	String query = "INSERT INTO ?(name, pwd, email, country) values(?,?,?,?) RETURNING playerid;";
+	String query = "INSERT INTO player(name, pwd, email, country) values(cast(? as VARCHAR(50)),cast(? as VARCHAR(50)),cast(? as VARCHAR(30)),cast(? as VARCHAR(20))) RETURNING id";
 	  PreparedStatement state;
 
 
 	  state = conn.prepareStatement(query);
-	  state.setString(1, "player");
-	  state.setString(2, name);
-	  state.setString(3, pwd);
-	  state.setString(4, email);
-	  state.setString(5, country);
+	  state.setString(1, name);
+	  state.setString(2, pwd);
+	  state.setString(3, email);
+	  state.setString(4, country);
 
 	  ResultSet result = state.executeQuery();
+	  result.next();
+	  int playerId = result.getInt("id");
 
-	  int playerId = result.getInt("playerid");
+	  result.close();
+	  state.close();
 
 		Profile new_profile = new Profile();
 
-		query = "INSERT INTO ?(id, _date, value) values(?,?,?);";
+		query = "INSERT INTO ?(id, _date, value) values(cast(? as integer),cast(? as Timestamp),cast(? as integer))";
 		state = conn.prepareStatement(query);
 
 		state.setString(1, "elo");
@@ -78,6 +81,7 @@ public static Profile insert_new_player(String name, String pwd, String country,
 		state.setTimestamp(3, getCurrentTimeStamp());
 		state.setInt(4, new_profile.eloRank);
 		state.executeQuery();
+		state.close();
 
 		String[] tables = {"gamecount", "gamewon", "pointbygame", "pointbyround", "roundcount"};
 	  for(String s : tables)
@@ -89,6 +93,7 @@ public static Profile insert_new_player(String name, String pwd, String country,
 		  state.setTimestamp(3, getCurrentTimeStamp());
 		  state.setInt(4, 0);
 		  state.executeQuery();
+		  state.close();
 	  }
 
 		new_profile.profileId = playerId;
@@ -112,7 +117,7 @@ private static java.sql.Timestamp getCurrentTimeStamp() {
 
 	java.util.Date today = new java.util.Date();
 	return new java.sql.Timestamp(today.getTime());
-	
+
 }
 
 /**
@@ -169,7 +174,7 @@ public static void setProfile(Profile profile) throws SQLException {
 public static Profile getProfile(int playerid) throws SQLException
 {
 	// 1 : d'abord on recupere les info du profile
-	String query = "SELECT ?,?,?,? FROM player  WHERE id = playerid";
+	String query = "SELECT ?,?,?,? FROM player  WHERE id = cast(? as integer)";
 	  PreparedStatement state;
 
 	  state = conn.prepareStatement(query);
@@ -178,16 +183,18 @@ public static Profile getProfile(int playerid) throws SQLException
 	  state.setString(2,"pwd");
 	  state.setString(3,"email");
 	  state.setString(4,"country");
+	  state.setInt(5, playerid);
 
 	  ResultSet result = state.executeQuery();
 
 	  Profile profile = new Profile();
-
+	  result.next();
+	  System.out.println(result);
 	  profile.userName = result.getString("name");
 	  profile.password = result.getString("pwd");
 	  profile.email = result.getString("email");
 	  profile.country = result.getString("country");
-	  
+	  result.close();
 	  //2) Ensuite on recupere le rang ELO
 	 /* String query2 = "SELECT TOP 1 ? FROM ? WHERE id = playerid ORDER BY date DESC";
 	  PreparedStatement state2;
@@ -195,29 +202,29 @@ public static Profile getProfile(int playerid) throws SQLException
 	  state2.setString(1,"value");
 	  state2.setString(2,"elo");
 	  ResultSet result2 = state2.executeQuery();
-	  
+
 	  profile.eloRank = result2.getInt("value");
-	  
+
 	  //3) Le nombre de partie jouées
 	  String query3 = "SELECT TOP 1 ? FROM ? WHERE id = playerid ORDER BY date DESC";
 	  PreparedStatement state3;
 	  state3 = conn.prepareStatement(query2);
 	  state3.setString(1,"value");
 	  state3.setString(2,"gameCount");
-	  ResultSet result3 = state3.executeQuery();	
-	  
+	  ResultSet result3 = state3.executeQuery();
+
 	  profile.gameCount = result3.getInt("value");
-	  
-	  // Nombre de parties gagnées 
+
+	  // Nombre de parties gagnées
 	  String query4 = "SELECT TOP 1 ? FROM ? WHERE id = playerid ORDER BY date DESC";
 	  PreparedStatement state4;
 	  state4 = conn.prepareStatement(query2);
 	  state4.setString(1,"value");
 	  state4.setString(2,"gameWon");
 	  ResultSet result4 = state4.executeQuery();
-	  
+
 	  profile.gameWon = result2.getInt("value");
-	  
+
 	  //roundCount
 	  String query5 = "SELECT TOP 1 ? FROM ? WHERE id = playerid ORDER BY date DESC";
 	  PreparedStatement state5;
@@ -225,9 +232,9 @@ public static Profile getProfile(int playerid) throws SQLException
 	  state5.setString(1,"value");
 	  state5.setString(2,"roundCount");
 	  ResultSet result5 = state5.executeQuery();
-	  
+
 	  profile.roundCount = result5.getInt("value");
-	  
+
 	  //pointByRound
 	  String query6 = "SELECT TOP 1 ? FROM ? WHERE id = playerid ORDER BY date DESC";
 	  PreparedStatement state6;
@@ -235,9 +242,9 @@ public static Profile getProfile(int playerid) throws SQLException
 	  state6.setString(1,"value");
 	  state6.setString(2,"pointByRound");
 	  ResultSet result6 = state6.executeQuery();
-	  
+
 	  profile.pointByRound = result6.getInt("value");
-	  
+
 	  //pointByGame
 	  String query7 = "SELECT TOP 1 ? FROM ? WHERE id = playerid ORDER BY date DESC";
 	  PreparedStatement state7;
@@ -245,7 +252,7 @@ public static Profile getProfile(int playerid) throws SQLException
 	  state7.setString(1,"value");
 	  state7.setString(2,"pointByGame");
 	  ResultSet result7 = state7.executeQuery();
-	  
+
 	  profile.pointByGame = result7.getInt("value");
 	  */
 	return profile;
@@ -260,7 +267,7 @@ public static int getProfileNumber() throws SQLException
 {
 	PreparedStatement state = conn.prepareStatement("SELECT count(id) AS count FROM player;");
 	ResultSet result = state.executeQuery();
-
+	result.next();
     int count = result.getInt("count");
 
 
