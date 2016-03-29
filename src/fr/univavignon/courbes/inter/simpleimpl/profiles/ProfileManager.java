@@ -80,7 +80,9 @@ public class ProfileManager
 	 * 		Le profil à supprimer.
 	 */
 	public static void removeProfile(Profile profile)
-	{	PROFILES.remove(profile);
+	{
+		PROFILES.remove(profile);
+		DatabaseCommunication.removeProfile(profile);
 		recordProfiles();
 	}
 
@@ -109,33 +111,21 @@ public class ProfileManager
 	private static void loadProfiles()
 	{	try
 		{
-			DatabaseCommunication.getProfiles();
+			int profile_number = DatabaseCommunication.getProfileNumber();
 
-			// int profileId = 0;
-			// // on en lit chaque ligne
-			// while(scanner.hasNext())
-			// {	String line = scanner.nextLine();
-			// 	String elem[] = line.split(SEPARATOR);
-			// 	if(elem.length == PROFILE_FIELD_NBR)
-			// 	{	// on crée le profil et on l'initialise
-			// 		Profile profile = new Profile();
-			// 		profile.profileId = profileId;
-			// 		profile.userName = elem[0].trim();
-			// 		profile.country = elem[1].trim();
-			// 		profile.eloRank = Integer.parseInt(elem[2].trim());
-			// 		profile.email = elem[3].trim();
-			// 		profile.password = elem[4].trim();
-			// 		PROFILES.add(profile);
-			// 	}
-			// 	else
-			// 		System.err.println("Erreur à la ligne "+(profileId+1)+" : elle contient " + elem.length + " éléments au lieu des "+PROFILE_FIELD_NBR+" attendus");
-			//
-			// 	profileId++;
-			// }
+			for (int profileId = 0; profileId < profile_number; profileId++) {
+				Profile profile = DatabaseCommunication.getProfile(profileId);
+				profile.profileId = profileId;
+				profile.userName = elem[0].trim();
+				profile.country = elem[1].trim();
+				profile.eloRank = Integer.parseInt(elem[2].trim());
+				profile.email = elem[3].trim();
+				profile.password = elem[4].trim();
+				PROFILES.add(profile);
+			}
 
-			// on ferme le fichier
-			// scanner.close();
 		}
+		
 		catch (IOException e)
 		{	e.printStackTrace();
 		}
