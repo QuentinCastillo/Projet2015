@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -42,8 +43,6 @@ public class ProfileManager
 {
 	/** Liste des profils */
 	private static final TreeSet<Profile> PROFILES = new TreeSet<Profile>();
-	/** Nombre de champs à lire par profil */
-	private static final int PROFILE_FIELD_NBR = 5;
 
 	/**
 	 * Renvoie la liste de tous profils disponibles. La méthode charge
@@ -69,6 +68,7 @@ public class ProfileManager
 	public static void addProfile(Profile profile)
 	{	Profile mx = Collections.max(PROFILES);
 		profile.profileId = mx.profileId + 1;
+		profile.changed = true;
 		PROFILES.add(profile);
 		recordProfiles();
 	}
@@ -80,26 +80,35 @@ public class ProfileManager
 	 * 		Le profil à supprimer.
 	 */
 	public static void removeProfile(Profile profile)
-	{	PROFILES.remove(profile);
-		recordProfiles();
+	{
+		PROFILES.remove(profile);
+		try {
+			DatabaseCommunication.removeProfile(profile);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
 	 * Enregistre la liste des profils dans la base de données
-	 * Grâce à la fonction xx de la classe DatabaseCommunication
+	 * Grâce à la fonction setProfile(Profile) de la classe DatabaseCommunication
 	 */
 	private static void recordProfiles()
 	{
-		// //TODO: Figure out how to do this with mary
-		// for(Profile profile: PROFILES)
-		// 		(	profile.userName + SEPARATOR +
-		// 			profile.country + SEPARATOR +
-		// 			profile.eloRank + SEPARATOR +
-		// 			profile.email + SEPARATOR +
-		// 			profile.partyNumber + SEPARATOR +
-		// 			profile.partyWon + SEPARATOR +
-		// 			profile.password + "\n"
-		// 		);
+		for(Profile profile: PROFILES)
+		{
+			if(profile.changed)
+			{
+				try {
+					DatabaseCommunication.setProfile(profile);
+					profile.changed = false;
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
+			}
+		}
+
 	}
 
 	/**
@@ -107,42 +116,28 @@ public class ProfileManager
 	 * texte structuré comme expliqué pour {@link #recordProfiles()}.
 	 */
 	private static void loadProfiles()
-	{	try
-		{
-		
-		DatabaseCommunication.getProfile();
+	{
+		int profile_number = 0;
+		try {
+			profile_number = DatabaseCommunication.getProfileNumber();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+		}
 
-			//	int profileId = 0;
-			// // on en lit chaque ligne
-			// while(scanner.hasNext())
-			// {	String line = scanner.nextLine();
-			// 	String elem[] = line.split(SEPARATOR);
-			// 	if(elem.length == PROFILE_FIELD_NBR)
-			// 	{	// on crée le profil et on l'initialise
-			// 		Profile profile = new Profile();
-			// 		profile.profileId = profileId;
-			// 		profile.userName = elem[0].trim();
-			// 		profile.country = elem[1].trim();
-			// 		profile.eloRank = Integer.parseInt(elem[2].trim());
-			// 		profile.email = elem[3].trim();
-			// 		profile.password = elem[4].trim();
-			// 		PROFILES.add(profile);
-			// 	}
-			// 	else
-			// 		System.err.println("Erreur à la ligne "+(profileId+1)+" : elle contient " + elem.length + " éléments au lieu des "+PROFILE_FIELD_NBR+" attendus");
-			//
-			// 	profileId++;
-			// }
-			// on ferme le fichier
-			// scanner.close();
+	for (int profileId = 0; profileId < profile_number; profileId++) {
+		try {
+			Profile profile;
+			profile = DatabaseCommunication.getProfile(profileId);
+			profile.changed = false;
+			PROFILES.add(profile);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-		catch (IOException e)
-		{	e.printStackTrace();
-		}
+	}
 	}
 
 	/**
-	 * Cherche le noms spécifié parmi les utilisateurs de la liste
+	 * Cherche le nom spécifié parmi les utilisateurs de la liste
 	 * et renvoie {@code true} s'il est trouvé.
 	 *
 	 * @param userName
@@ -157,7 +152,7 @@ public class ProfileManager
 		{	Profile profile = it.next();
 			found = userName.equalsIgnoreCase(profile.userName);
 		}
-		return false;
+		return found;
 	}
 
 	/**

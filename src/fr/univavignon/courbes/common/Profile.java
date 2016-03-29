@@ -56,7 +56,7 @@ public class Profile implements Serializable, Comparable<Profile>
 	
 	/** nombre de point par manche */
 	public int pointByRound;
-	
+	     
 	/** nombre de points par partie */
 	public int pointByGame;
 	
@@ -70,6 +70,15 @@ public class Profile implements Serializable, Comparable<Profile>
 	public String userName;
 	/** Pays associé au profil */
 	public String country;
+	
+	////////////////////////////////////////////////////////////////
+	////	AUTRES
+	////////////////////////////////////////////////////////////////
+	/**
+	 * True if the profile was changed during the session
+	 */
+	public boolean changed;
+	
 	
 	////////////////////////////////////////////////////////////////
 	////	COMPARAISON
