@@ -48,7 +48,7 @@ public static void connect_db()
  * @param pwd player's password
  * @param country player's country
  * @param email player's email
- * @throws SQLException //TODO: handle this 
+ * @throws SQLException //TODO: handle this
  */
 public static void insert_new_player(String name, String pwd, String country, String email) throws SQLException
   {
@@ -97,9 +97,9 @@ public static void insert_new_player(String name, String pwd, String country, St
 		new_profile.pointByGame = 0;
 		new_profile.pointByRound = 0;
 		new_profile.roundCount = 0;
-		
+
 		ProfileManager.addProfile(new_profile);
-		
+
 
   }
 
@@ -116,13 +116,33 @@ private static java.sql.Timestamp getCurrentTimeStamp() {
 /**
  * Removes a profile from the database;
  * @param profile The profile to remove
- * @throws SQLException 
+ * @throws SQLException
  */
 public static void removeProfile(Profile profile) throws SQLException {
 	String query = "DELETE FROM player WHERE id = " + profile.profileId;
 	PreparedStatement state = conn.prepareStatement(query);
 	state.executeQuery();
-	
+
 }
+
+public static void setProfile(Profile profile) {
+	String query = "UPDATE player SET (name, pwd, email, country) = (?,?,?,?)";
+	PreparedStatement state = conn.prepareStatement(query);
+	state.setString(1, profile.userName);
+	state.setString(2, profile.password);
+	state.setString(3, profile.email);
+	state.setString(4, profile.country);
+	state.executeQuery();
+
+	state = conn.prepareStatement(query);
+
+
+	profile.eloRank
+	profile.partyNumber
+	profile.partyWon
+	profile.password
+}
+
+
 
 }

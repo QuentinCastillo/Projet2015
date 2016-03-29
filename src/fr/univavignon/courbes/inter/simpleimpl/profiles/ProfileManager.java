@@ -42,8 +42,6 @@ public class ProfileManager
 {
 	/** Liste des profils */
 	private static final TreeSet<Profile> PROFILES = new TreeSet<Profile>();
-	/** Nombre de champs à lire par profil */
-	private static final int PROFILE_FIELD_NBR = 5;
 
 	/**
 	 * Renvoie la liste de tous profils disponibles. La méthode charge
@@ -69,6 +67,7 @@ public class ProfileManager
 	public static void addProfile(Profile profile)
 	{	Profile mx = Collections.max(PROFILES);
 		profile.profileId = mx.profileId + 1;
+		profile.changed = true;
 		PROFILES.add(profile);
 		recordProfiles();
 	}
@@ -83,25 +82,23 @@ public class ProfileManager
 	{
 		PROFILES.remove(profile);
 		DatabaseCommunication.removeProfile(profile);
-		recordProfiles();
 	}
 
 	/**
 	 * Enregistre la liste des profils dans la base de données
-	 * Grâce à la fonction xx de la classe DatabaseCommunication
+	 * Grâce à la fonction setProfile(Profile) de la classe DatabaseCommunication
 	 */
 	private static void recordProfiles()
 	{
-		// //TODO: Figure out how to do this with mary
-		// for(Profile profile: PROFILES)
-		// 		(	profile.userName + SEPARATOR +
-		// 			profile.country + SEPARATOR +
-		// 			profile.eloRank + SEPARATOR +
-		// 			profile.email + SEPARATOR +
-		// 			profile.partyNumber + SEPARATOR +
-		// 			profile.partyWon + SEPARATOR +
-		// 			profile.password + "\n"
-		// 		);
+		for(Profile profile: PROFILES)
+		{
+			if(profile.changed)
+			{
+				DatabaseCommunication.setProfile(profile);
+				profile.changed = false;
+			}
+		}
+
 	}
 
 	/**
@@ -115,17 +112,12 @@ public class ProfileManager
 
 			for (int profileId = 0; profileId < profile_number; profileId++) {
 				Profile profile = DatabaseCommunication.getProfile(profileId);
-				profile.profileId = profileId;
-				profile.userName = elem[0].trim();
-				profile.country = elem[1].trim();
-				profile.eloRank = Integer.parseInt(elem[2].trim());
-				profile.email = elem[3].trim();
-				profile.password = elem[4].trim();
+				profile.changed = false;
 				PROFILES.add(profile);
 			}
 
 		}
-		
+
 		catch (IOException e)
 		{	e.printStackTrace();
 		}
