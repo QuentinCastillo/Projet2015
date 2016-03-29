@@ -6,4 +6,9 @@ Remake de [Achtung, Die Kurve!](https://en.wikipedia.org/wiki/Achtung,_die_Kurve
 
 -----------------------------------------------------------------------
 
-Editez ce texte de manière à faire apparaître la liste des 4 étudiants composant votre groupe.
+Groupe 04
+
+Quentin Castillo
+Gael Cuminal
+Christophe Gala
+Mary Pascal

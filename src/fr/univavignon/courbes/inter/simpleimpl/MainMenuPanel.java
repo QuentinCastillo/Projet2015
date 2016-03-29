@@ -168,7 +168,8 @@ public class MainMenuPanel extends JPanel implements ActionListener
 	
 		else if(e.getSource()==clientGameButton)
 		{	if (ProfileManager.getProfiles().size() > 0)
-			{	mainWindow.displayPanel(PanelName.CLIENT_GAME_PLAYER_SELECTION);
+			{	
+				mainWindow.displayPanel(PanelName.CLIENT_GAME_PLAYER_SELECTION);
 			}
 			else
 			{	JOptionPane.showMessageDialog

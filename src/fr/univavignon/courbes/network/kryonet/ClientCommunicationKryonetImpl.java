@@ -1,4 +1,4 @@
-package fr.univavignon.courbes.network.simpleimpl.client;
+package fr.univavignon.courbes.network.kryonet;
 
 /*
  * Courbes
@@ -18,13 +18,14 @@ package fr.univavignon.courbes.network.simpleimpl.client;
  * along with Courbes. If not, see <http://www.gnu.org/licenses/>.
  */
 
-import fr.univavignon.courbes.network.ClientCommunication;
-import fr.univavignon.courbes.network.simpleimpl.NetworkConstants;
-
+import java.awt.EventQueue;
 import java.io.IOException;
-import java.net.ConnectException;
-import java.net.Socket;
-import java.net.UnknownHostException;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
+
+import com.esotericsoftware.kryonet.Client;
+import com.esotericsoftware.kryonet.Connection;
+import com.esotericsoftware.kryonet.Listener;
 
 import fr.univavignon.courbes.common.Constants;
 import fr.univavignon.courbes.common.Direction;
@@ -36,17 +37,18 @@ import fr.univavignon.courbes.inter.ClientGameHandler;
 import fr.univavignon.courbes.inter.ClientProfileHandler;
 import fr.univavignon.courbes.inter.ErrorHandler;
 
+import fr.univavignon.courbes.network.ClientCommunication;
+import fr.univavignon.courbes.network.kryonet.NetworkConstants;
+
 /**
- * Implémentation de la classe {@link ClientCommunication}. Elle se repose
- * sur deux autres classes pour les entrées ({@link ClientReadRunnable}) et 
- * les sorties ({@link ClientWriteRunnable}).
+ * Implémentation de la classe {@link ClientCommunication}. Elle repose
+ * sur la bibliothèque <a href="https://github.com/EsotericSoftware/kryonet">Kryonet</>.
  * 
- * @author	L3 Info UAPV 2015-16
+ * @author L3 Info UAPV 2015-16
  */
-public class ClientCommunicationImpl implements ClientCommunication
-{	
+public class ClientCommunicationKryonetImpl extends Listener implements ClientCommunication {
 	////////////////////////////////////////////////////////////////
-	////	ADRESSE IP
+	//// ADRESSE IP
 	////////////////////////////////////////////////////////////////
 	/** Variable qui contient l'adresse ip du serveur */
 	private String ip;
@@ -62,10 +64,10 @@ public class ClientCommunicationImpl implements ClientCommunication
 	}
 
 	////////////////////////////////////////////////////////////////
-	////	PORT
+	//// PORT
 	////////////////////////////////////////////////////////////////
 	/** Variable qui contient le port du serveur */
-	private int port = Constants.DEFAULT_PORT;//2345;
+	private int port = Constants.DEFAULT_PORT;// 2345;
 
 	@Override
 	public int getPort()
@@ -76,9 +78,9 @@ public class ClientCommunicationImpl implements ClientCommunication
 	public void setPort(int port)
 	{	this.port = port;
 	}
-	
+
 	////////////////////////////////////////////////////////////////
-	////	HANDLER DE CONNEXION
+	//// HANDLER DE CONNEXION
 	////////////////////////////////////////////////////////////////
 	/** Handler de connexion */
 	public ClientConnectionHandler connectionHandler;
@@ -87,90 +89,110 @@ public class ClientCommunicationImpl implements ClientCommunication
 	public void setConnectionHandler(ClientConnectionHandler connectionHandler)
 	{	this.connectionHandler = connectionHandler;
 	}
-	
+
 	/**
 	 * Transmet cet appel au handler concerné.
 	 */
 	protected void gotAccepted()
-	{	if(connectionHandler!=null)
+	{	if (connectionHandler != null)
 			connectionHandler.gotAccepted();
 //		else
 //			System.err.println("Le handler de connexion n'a pas été renseigné !");
 	}
-	
+
 	/**
 	 * Transmet cet appel au handler concerné.
 	 */
 	protected void gotRefused()
 	{	closeClient();
-		if(connectionHandler!=null)
+		if (connectionHandler != null)
 			connectionHandler.gotRefused();
 //		else
 //			System.err.println("Le handler de connexion n'a pas été renseigné !");
 	}
-	
+
 	////////////////////////////////////////////////////////////////
-	////	HANDLER DE PROFILS
+	//// HANDLER DE PROFILS
 	////////////////////////////////////////////////////////////////
 	/** Handler de profils */
-	public ClientProfileHandler profileHandler;
+	private ClientProfileHandler profileHandler;
 
 	@Override
 	public void setProfileHandler(ClientProfileHandler configHandler)
 	{	this.profileHandler = configHandler;
 	}
-	
+
 	/**
 	 * Transmet cet appel au handler concerné.
 	 */
 	protected void gotKicked()
 	{	closeClient();
-		if(profileHandler!=null)
+		if (profileHandler != null)
 			profileHandler.gotKicked();
 //		else
 //			System.err.println("Le handler de profils n'a pas été renseigné !");
 	}
-	
+
 	/**
 	 * Transmet cet appel au handler concerné.
 	 * 
 	 * @param profiles
-	 * 		Tableau de profils à transmettre au handler.
+	 *            Tableau de profils à transmettre au handler.
 	 */
 	protected void updateProfiles(Profile[] profiles)
-	{	if(profileHandler!=null)
+	{	/* If the handler is not defined */
+		int iteration = 0;
+
+		/*
+		 * Wait to give enough time for method <init> from ClientGameWaitPanel
+		 * to be called to set the handler
+		 */
+		while (profileHandler == null && iteration < 100)
+		{	try
+			{	Thread.sleep(10);
+			}
+			catch (InterruptedException e)
+			{	e.printStackTrace();
+			}
+			iteration++;
+		}
+		
+		if (profileHandler != null)
 			profileHandler.updateProfiles(profiles);
 //		else
 //			System.err.println("Le handler de profils n'a pas été renseigné !");
 	}
-	
+
 	/**
 	 * Transmet cet appel au handler concerné.
 	 * 
 	 * @param round
-	 * 		Manche à transmettre au handler.
+	 *            Manche à transmettre au handler.
 	 */
 	protected void startGame(Round round)
-	{	if(profileHandler!=null)
+	{	if (profileHandler != null)
 			profileHandler.startGame(round);
 //		else
 //			System.err.println("Le handler de profils n'a pas été renseigné !");
 	}
-	
+
 	/**
 	 * Transmet cet appel au handler concerné.
 	 */
 	public void connectionLost()
-	{	if(profileHandler!=null)
+	{	if (profileHandler != null)
 			profileHandler.connectionLost();
 //		else
 //			System.err.println("Le handler de profils n'a pas été renseigné !");
+		
 		if(gameHandler!=null)
 			gameHandler.connectionLost();
+//		else
+//			System.err.println("Le handler de partie n'a pas été renseigné !");
 	}
-	
+
 	////////////////////////////////////////////////////////////////
-	////	HANDLER DE LA PARTIE
+	//// HANDLER DE LA PARTIE
 	////////////////////////////////////////////////////////////////
 	/** Handler de la partie */
 	public ClientGameHandler gameHandler;
@@ -179,22 +201,22 @@ public class ClientCommunicationImpl implements ClientCommunication
 	public void setGameHandler(ClientGameHandler gameHandler)
 	{	this.gameHandler = gameHandler;
 	}
-	
+
 	/**
 	 * Transmet cet appel au handler concerné.
 	 * 
 	 * @param round
-	 * 		Manche à transmettre au handler.
+	 *            Manche à transmettre au handler.
 	 */
 	public void fetchRound(Round round)
-	{	if(gameHandler!=null)
+	{	if (gameHandler != null)
 			gameHandler.fetchRound(round);
 //		else
 //			System.err.println("Le handler de partie n'a pas été renseigné !");
 	}
-	
+
 	////////////////////////////////////////////////////////////////
-	////	HANDLER D'ERREUR
+	//// HANDLER D'ERREUR
 	////////////////////////////////////////////////////////////////
 	/** Handler d'erreurs */
 	public ErrorHandler errorHandler;
@@ -203,153 +225,200 @@ public class ClientCommunicationImpl implements ClientCommunication
 	public void setErrorHandler(ErrorHandler errorHandler)
 	{	this.errorHandler = errorHandler;
 	}
-	
+
 	/**
 	 * Transmet cet appel au handler concerné.
 	 * 
 	 * @param message
-	 * 		Message à transmettre au handler.
+	 *            Message à transmettre au handler.
 	 */
 	public void displayError(String message)
-	{	if(errorHandler!=null)
+	{	if (errorHandler != null)
 			errorHandler.displayError(message);
 //		else
 //			System.err.println("Le handler d'erreur n'a pas été renseigné !");
 	}
-	
+
 	////////////////////////////////////////////////////////////////
-	////	CONNEXION
+	//// CONNEXION
 	////////////////////////////////////////////////////////////////
-	/** Socket du client connecté au serveur */
-	public Socket socket = null;
-	
+	/**
+	 * Objet de la librairie kryonet représentant le client
+	 */
+	private Client client;
+
+	/** Indentifie la premier manche reçue */
+	private boolean firstRound;
+
 	@Override
 	public synchronized boolean launchClient()
 	{	boolean result = true;
-	
+
+		client = new Client(60000, 60000);
+		client.start();
+
+		firstRound = true;
+
+		ClassRegisterer.register(client);
+
+		client.addListener(this);
+
+		int timeout = 5000;
 		try
-		{	// on ouvre le socket
-			socket = new Socket(ip, port);
-			
-			// on crée un thread pour s'occuper des sorties
-			cwr = new ClientWriteRunnable(this);
-			Thread outThread = new Thread(cwr,"Courbes-Client-Out");
-			outThread.start();
-			
-			// on crée un thread pour s'occuper des entrées
-			crr = new ClientReadRunnable(this);
-			Thread inThread = new Thread(crr,"Courbes-Client-In");
-			inThread.start();
+		{	client.connect(timeout, ip, port, port + 1);
 		}
-		catch(ConnectException e)
+		catch (IOException e)
 		{	result = false;
-		}
-		catch(UnknownHostException e)
-		{	result = false;
-			errorHandler.displayError("Impossible de se connecter au serveur.");
 			e.printStackTrace();
 		}
-		catch(IOException e)
-		{	result = false;
-			errorHandler.displayError("Impossible de se connecter au serveur.");
-			e.printStackTrace();
-		}
-		
+
 		return result;
 	}
 
 	@Override
 	public synchronized void closeClient()
-	{	if(socket!=null)
-		{	
-//			// on indique qu'on se déconnecte
-//			cwr.objects.offer(NetworkConstants.ANNOUNCE_DISCONNECTION);
-			
-			// on indique aux deux threads de se terminer (proprement)
-			crr.setActive(false);
-			crr = null;
-			cwr.setActive(false);
-			cwr = null;
-			
-			// on ferme la socket
-			try
-			{	socket.close();
-				socket = null;
-			}
-			catch (IOException e)
-			{	e.printStackTrace();
-				errorHandler.displayError("Erreur lors de la fermeture du socket.");
-			}
-		}
+	{	client.stop();
 	}
 
 	@Override
 	public synchronized boolean isConnected()
-	{	boolean result = socket!=null && socket.isConnected() && !socket.isClosed();
-		return result;
+	{	return client != null && client.isConnected();
 	}
-	
+
 	/**
-	 * Méthode appelée quand la connexion avec le serveur est perdue accidentellement.
+	 * Méthode appelée quand la connexion avec le serveur est perdue
+	 * accidentellement.
 	 */
 	protected synchronized void lostConnection()
-	{	if(socket!=null)
+	{	if(client != null)
 		{	connectionLost();
 			closeClient();
 		}
 	}
-	
-	////////////////////////////////////////////////////////////////
-	////	ENTREES
-	////////////////////////////////////////////////////////////////
-	/** Objet chargé de la communication en entrée avec le serveur */
-	private ClientReadRunnable crr;
 
+	////////////////////////////////////////////////////////////////
+	//// ENTREES
+	////////////////////////////////////////////////////////////////
 	@Override
 	public Integer retrievePointThreshold()
-	{	Integer result = null;
-		if(crr!=null)
-			result = crr.pointsLimits.poll();
+	{	Integer result = pointsLimits.poll();
 		return result;
 	}
 
 	@Override
 	public UpdateInterface retrieveUpdate()
-	{	UpdateInterface result = null;
-		if(crr!=null)
-			result = crr.updateData.poll();
+	{	UpdateInterface result = updateData.poll();
 		return result;
 	}
-	
-	@Override
-	public synchronized void finalizeRound()
-	{	
-//		while(clientCom.retrieveUpdate()!=null);
-		if(crr!=null)
-			crr.updateData.clear();
-	}
-	
+
 	////////////////////////////////////////////////////////////////
-	////	SORTIES
+	//// SORTIES
 	////////////////////////////////////////////////////////////////
-	/** Objet chargé de la communication en sortie avec le serveur */
-	private ClientWriteRunnable cwr;
-	
 	@Override
 	public void sendCommand(Direction direction)
-	{	if(cwr!=null)
-			cwr.objects.offer(direction);
+	{	Integer intToSend = new Integer(0);
+		
+		switch (direction)
+		{	case LEFT:
+				intToSend = new Integer(-1);
+				break;
+			case RIGHT:
+				intToSend = new Integer(1);
+				break;
+		}
+		client.sendTCP(intToSend);
 	}
 
 	@Override
 	public void sendProfile(Profile profile)
-	{	if(cwr!=null)
-			cwr.objects.offer(profile);
+	{	client.sendTCP(profile);
 	}
-	
+
 	@Override
 	public void sendAcknowledgment()
-	{	if(cwr!=null)
-			cwr.objects.offer(NetworkConstants.ANNOUNCE_ACKNOWLEDGMENT);
+	{	client.sendTCP(NetworkConstants.ANNOUNCE_ACKNOWLEDGMENT);
+	}
+
+	////////////////////////////////////////////////////////////////
+	//// FILES DE DONNEES
+	////////////////////////////////////////////////////////////////
+	/**
+	 * File des aires de jeu reçues du serveur et en attente de récupération par
+	 * l'Interface Utilisateur
+	 */
+	protected Queue<UpdateInterface> updateData = new ConcurrentLinkedQueue<UpdateInterface>();
+
+	/**
+	 * File des limites de points reçues du serveur et en attente de
+	 * récupération par l'Interface Utilisateur
+	 */
+	protected Queue<Integer> pointsLimits = new ConcurrentLinkedQueue<Integer>();
+
+	/**
+	 * Method called when the connection with the server is created
+	 */
+	@Override
+	public void connected(Connection connection)
+	{	/* Send a Boolean so that the server can send back the ANNOUNCE_ACCEPTED or ANNOUNCE_REJECTED String */
+		client.sendTCP(new Boolean(true));
+	}
+
+	/**
+	 * Method called when an object is received from the connection
+	 */
+	@Override
+	public void received(Connection connection, Object object)
+	{	if (object instanceof String)
+		{	String string = (String) object;
+
+			if (string.equals(NetworkConstants.ANNOUNCE_REJECTED_CONNECTION))
+				gotRefused();
+			else if (string.equals(NetworkConstants.ANNOUNCE_ACCEPTED_CONNECTION))
+				gotAccepted();
+			else if (string.equals(NetworkConstants.ANNOUNCE_REJECTED_PROFILE))
+				gotKicked();
+		}
+
+		else if (object instanceof UpdateInterface)
+		{	UpdateInterface ud = (UpdateInterface) object;
+			updateData.offer(ud);
+		}
+		else if (object instanceof Integer)
+		{	Integer integer = (Integer) object;
+			pointsLimits.offer(integer);
+		}
+
+		else if (object instanceof Round)
+		{	Round round = (Round) object;
+			if(firstRound)
+			{	startGame(round);
+				firstRound = false;
+			}
+			else
+				fetchRound(round);
+		}
+		else if (object instanceof Profile[])
+		{	Profile[] profiles = (Profile[]) object;
+			updateProfiles(profiles);
+		}
+	}
+
+	/**
+	 * Method called when the connection with the server is lost
+	 * @param connection the connection
+	 */
+	@Override
+	public void disconnected(Connection connection)
+	{	EventQueue.invokeLater(new Runnable()
+		{	@Override
+			public void run()
+			{	lostConnection();
+			}
+		});
+	}
+
+	@Override
+	public void finalizeRound()
+	{	// Nothing to do
 	}
 }
