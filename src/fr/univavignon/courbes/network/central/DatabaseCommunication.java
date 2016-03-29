@@ -51,7 +51,7 @@ public static void connect_db()
  * @param email player's email
  * @throws SQLException //TODO: handle this
  */
-public static void insert_new_player(String name, String pwd, String country, String email) throws SQLException
+public static Profile insert_new_player(String name, String pwd, String country, String email) throws SQLException
   {
 	String query = "INSERT INTO ?(name, pwd, email, country) values(?,?,?,?) RETURNING playerid;";
 	  PreparedStatement state;
@@ -101,6 +101,7 @@ public static void insert_new_player(String name, String pwd, String country, St
 
 		ProfileManager.addProfile(new_profile);
 
+		return Profile;
 
   }
 
@@ -196,10 +197,10 @@ public static Profile getProfile(int playerid) throws SQLException
  */
 public static int getProfileNumber() throws SQLException
 {
-	PreparedStatement state = conn.prepareStatement("SELECT count(id) FROM player;");
+	PreparedStatement state = conn.prepareStatement("SELECT count(id) AS count FROM player;");
 	ResultSet result = state.executeQuery();
 
-    int count = result.getInt("count(id)");
+    int count = result.getInt("count");
 
 
     return count;

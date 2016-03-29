@@ -47,6 +47,7 @@ import fr.univavignon.courbes.inter.simpleimpl.remote.server.ServerGameRemotePla
 import fr.univavignon.courbes.inter.simpleimpl.remote.server.ServerGameRoundPanel;
 import fr.univavignon.courbes.network.ClientCommunication;
 import fr.univavignon.courbes.network.ServerCommunication;
+import fr.univavignon.courbes.stats.GraphPanel;
 import fr.univavignon.courbes.stats.StatListPanel;
 import fr.univavignon.courbes.stats.Stats;
 
@@ -170,7 +171,9 @@ public class MainWindow extends JFrame implements ErrorHandler, WindowListener
 		/** Liste des profils */
 		PROFILE_LIST,
 		/** Affichage des statistiques */
-		STATISTICS;
+		STATISTICS,
+		/** Affichage des graphiques */
+		STATS_GRAPHS;
 	}
 	
 	/**
@@ -220,6 +223,9 @@ public class MainWindow extends JFrame implements ErrorHandler, WindowListener
 				break;
 			case STATISTICS:
 				currentPanel = new StatListPanel(this);
+				break;
+			case STATS_GRAPHS:
+				currentPanel = new GraphPanel(this);
 				break;
 		}
 		

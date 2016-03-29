@@ -28,7 +28,7 @@ import fr.univavignon.courbes.inter.simpleimpl.SettingsManager;
 
 /*
 * Panel destiné à afficher la liste des stats des profils existants.
-* 
+*
 * @author	Mary L3 Info UAPV 2015-16
 */
 public class StatListPanel extends JPanel implements ActionListener
@@ -39,53 +39,54 @@ public class StatListPanel extends JPanel implements ActionListener
 	/** Pays par défaut pour le champ texte */
 	private static final String DEFAULT_COUNTRY = "Pays";
 
-	
+
 	/**
 	 * Crée un nouveau panel destiné à afficher la liste des profils.
-	 * 
+	 *
 	 * @param mainWindow
 	 * 		Fenêtre principale contenant ce panel.
 	 */
 	public StatListPanel(MainWindow mainWindow)
 	{	super();
 		this.mainWindow = mainWindow;
-		
+
 		init();
 	}
-	
+
 	/** Fenêtre contenant ce panel */
 	private MainWindow mainWindow;
 	/** Table affichée par ce panel */
 	private JTable statTable;
 	/** Scrollpane contenu dans ce panel pour afficher la table */
-	private JScrollPane scrollPane; 
+	private JScrollPane scrollPane;
 	/** Bouton pour revenir au menu principal */
 	private JButton backButton;
+	/** Bouton pour aller à la page suivante*/
+	private JButton nextButton;
 
-	
 	/**
 	 * Méthode principale d'initialisation du panel.
 	 */
 	private void init()
 	{	BoxLayout layout = new BoxLayout(this, BoxLayout.PAGE_AXIS);
 		setLayout(layout);
-	
+
 		initTablePanel();
-		
+
 		add(Box.createVerticalGlue());
 
 		initButtonsPanel();
 	}
-	
+
 	/**
 	 * Initialisation de la table affichée par ce panel.
 	 */
 	private void initTablePanel()
 	{	statTable = new JTable();
 		statTable.setAutoCreateRowSorter(true);
-		
+
 		statTable.setModel(new Stats());
-		
+
 		scrollPane = new JScrollPane
 		(	statTable,
 			JScrollPane.VERTICAL_SCROLLBAR_ALWAYS,
@@ -102,7 +103,7 @@ public class StatListPanel extends JPanel implements ActionListener
 		add(scrollPane);
 	}
 
-	
+
 	/**
 	 * Initialisation des boutons contenus dans ce panel.
 	 */
@@ -110,18 +111,26 @@ public class StatListPanel extends JPanel implements ActionListener
 	{	JPanel panel = new JPanel();
 		BoxLayout layout = new BoxLayout(panel, BoxLayout.LINE_AXIS);
 		panel.setLayout(layout);
-		
+
 		backButton = new JButton("Retour");
 		backButton.addActionListener(this);
 		panel.add(backButton);
-		
+
+		nextButton = new JButton("Afficher");
+		nextButton.addActionListener(this);
+		panel.add(nextButton);
+
 		panel.add(Box.createHorizontalGlue());
-		
+
 		add(panel);
 	}
-	
+
+	@Override
 	public void actionPerformed(ActionEvent e)
-	{	if(e.getSource()==backButton)
-		mainWindow.displayPanel(PanelName.MAIN_MENU);
+	{
+		if(e.getSource()==backButton)
+			mainWindow.displayPanel(PanelName.MAIN_MENU);
+		else if(e.getSource()==nextButton)
+			mainWindow.displayPanel(PanelName.STATS_GRAPHS);
 	}
 }
