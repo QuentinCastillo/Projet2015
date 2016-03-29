@@ -44,8 +44,6 @@ public class ProfileManager
 	/** Liste des profils */
 	private static final TreeSet<Profile> PROFILES = new TreeSet<Profile>();
 
-	/** Nombre de champs à lire par profil */
-	private static final int PROFILE_FIELD_NBR = 6;
 	
 	/**
 	 * Renvoie la liste de tous profils disponibles. La méthode charge
@@ -133,8 +131,11 @@ public class ProfileManager
 		try {
 			Profile profile;
 			profile = DatabaseCommunication.getProfile(profileId);
-			profile.changed = false;
-			PROFILES.add(profile);
+			if(profile != null)
+			{
+				profile.changed = false;
+				PROFILES.add(profile);
+			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}

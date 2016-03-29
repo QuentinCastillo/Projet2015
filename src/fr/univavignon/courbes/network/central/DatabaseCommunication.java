@@ -183,13 +183,20 @@ public static Profile getProfile(int playerid) throws SQLException
 	  ResultSet result = state.executeQuery();
 
 	  Profile profile = new Profile();
-	  result.next();
 	  profile.profileId = playerid;
+	  
+	  if(result.next())
+	  {
 	  profile.userName = result.getString("name");
 	  profile.password = result.getString("pwd");
 	  profile.email = result.getString("email");
 	  profile.country = result.getString("country");
+	  }
+	  
+	  else
+		  return null;
 	  result.close();
+	  
 	  //2) Ensuite on recupere le rang ELO
 	 /* String query2 = "SELECT TOP 1 ? FROM ? WHERE id = playerid ORDER BY date DESC";
 	  PreparedStatement state2;
