@@ -31,7 +31,12 @@ public class ClientCentralPanel extends AbstractConnectionPanel implements Clien
 	private boolean connect()
 	{	// on initialise le Moteur Réseau
 		ClientCommunication clientCom = null;
-		PublicGameConnection.joinPublicGame();
+		boolean co=PublicGameConnection.joinPublicGame();
+		if(!co){
+			JOptionPane.showMessageDialog
+			    (mainWindow,"<html>Impossible de se connecter à la base de données<br><b>Retour au menu principal...</b></html>");
+			mainWindow.displayPanel(PanelName.MAIN_MENU);
+			}
 		NetEngineImpl netEngineImpl = SettingsManager.getNetEngineImpl();
 		switch(netEngineImpl)
 		{	case KRYONET:

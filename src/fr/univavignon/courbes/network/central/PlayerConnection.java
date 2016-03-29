@@ -29,23 +29,20 @@ public class PlayerConnection {
       return null;
     }
     
-    public static boolean playerConnect(Profile profil)
+    public static boolean playerConnect(String user, String pswd)
     {
           String query="Select * from player where pseudo=? and password=? ";
           Connection connection=connect();
           if(connection != null) {
               try {
                   PreparedStatement prepare = connection.prepareStatement(query);
-                  prepare.setString(1,profil.userName);
-                  prepare.setString(2,profil.password);
+                  prepare.setString(1,user);
+                  prepare.setString(2,pswd);
                   ResultSet result = prepare.executeQuery();
                   if(result.next())
                   {
-                      profil.profileId = result.getInt(1);
                       return true;
                   }
-                  
-                  addPlayer(profil);
               } catch (SQLException e) {
                   // TODO Auto-generated catch block
               }

@@ -47,7 +47,7 @@ import fr.univavignon.courbes.inter.simpleimpl.remote.server.ServerGameRemotePla
 import fr.univavignon.courbes.inter.simpleimpl.remote.server.ServerGameRoundPanel;
 import fr.univavignon.courbes.network.ClientCommunication;
 import fr.univavignon.courbes.network.ServerCommunication;
-import fr.univavignon.courbes.inter.central.CentralPanel;
+import fr.univavignon.courbes.inter.central.ClientCentralPanel;
 
 /**
  * Menu principal du jeu.
@@ -230,7 +230,8 @@ public class MainWindow extends JFrame implements ErrorHandler, WindowListener
 				break;
 				
 			case CLIENT_CENTRAL_CONNECTION:
-				currentPanel= new CentralPanel(this);
+				currentPanel= new ClientCentralPanel(this);
+				break;
 			// profils
 			case PROFILE_LIST:
 				currentPanel = new ProfileListPanel(this);

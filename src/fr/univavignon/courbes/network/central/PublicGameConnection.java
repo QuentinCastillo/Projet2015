@@ -36,7 +36,7 @@ public class PublicGameConnection {
         }
     }
 	
-	public static void joinPublicGame()
+	public static boolean joinPublicGame()
 	{
 		Connection connection = PlayerConnection.connect();
 		String query="Select ip from partie where nb_players<nb_max_players";
@@ -55,9 +55,13 @@ public class PublicGameConnection {
 	            }
 	            if(SettingsManager.getLastServerIp()!="localhost")
 	            {
-	            	break;
+	            	return true;
 	            }
 			}
         }
+		else
+		{
+			return false;
+		}
 	}
 }
