@@ -218,6 +218,7 @@ public class ProfileListPanel extends JPanel implements ActionListener, FocusLis
 
 			Profile profile = new Profile();
 			try {
+				//DatabaseCommunication.connect_db();
 				profile = DatabaseCommunication.insert_new_player(userName, password, country, email);
 			} catch (SQLException e) {
 

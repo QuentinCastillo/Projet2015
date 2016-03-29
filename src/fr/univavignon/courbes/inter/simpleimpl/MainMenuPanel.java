@@ -79,7 +79,7 @@ public class MainMenuPanel extends JPanel implements ActionListener
 	 */
 	public void initMenu()
 	{	
-		//DatabaseCommunication.connect_db();
+		DatabaseCommunication.connect_db();
 		BorderLayout borderLayout = new BorderLayout();
 		setLayout(borderLayout);
 

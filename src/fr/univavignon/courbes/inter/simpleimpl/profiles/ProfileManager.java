@@ -43,13 +43,10 @@ public class ProfileManager
 {
 	/** Liste des profils */
 	private static final TreeSet<Profile> PROFILES = new TreeSet<Profile>();
-<<<<<<< HEAD
 
-=======
 	/** Nombre de champs à lire par profil */
 	private static final int PROFILE_FIELD_NBR = 6;
 	
->>>>>>> refs/remotes/origin/master
 	/**
 	 * Renvoie la liste de tous profils disponibles. La méthode charge
 	 * cette liste si ce n'est pas déjà fait.
@@ -72,19 +69,10 @@ public class ProfileManager
 	 * 		Utilisateur à rajouter.
 	 */
 	public static void addProfile(Profile profile)
-<<<<<<< HEAD
 	{	Profile mx = Collections.max(PROFILES);
 		profile.profileId = mx.profileId + 1;
 		profile.changed = true;
-=======
-	{	if(PROFILES.isEmpty())
-			profile.profileId = 0;
-		else
-		{	Profile mx = Collections.max(PROFILES);
-			profile.profileId = mx.profileId + 1;
-		}
-		
->>>>>>> refs/remotes/origin/master
+
 		PROFILES.add(profile);
 		recordProfiles();
 	}
@@ -110,7 +98,6 @@ public class ProfileManager
 	 * Grâce à la fonction setProfile(Profile) de la classe DatabaseCommunication
 	 */
 	private static void recordProfiles()
-<<<<<<< HEAD
 	{
 		for(Profile profile: PROFILES)
 		{
@@ -122,26 +109,8 @@ public class ProfileManager
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-				
-=======
-	{	try
-		{	FileOutputStream fos = new FileOutputStream(PROFILE_FILE);
-			OutputStreamWriter osw = new OutputStreamWriter(fos);
-			PrintWriter writer = new PrintWriter(osw);
-			
-			for(Profile profile: PROFILES)
-			{	writer.write
-				(	profile.userName + SEPARATOR + 
-					profile.country + SEPARATOR +
-					profile.eloRank + SEPARATOR +
-					profile.email + SEPARATOR +
-					profile.password + SEPARATOR +
-					profile.agent + "\n"
-				);
->>>>>>> refs/remotes/origin/master
 			}
 		}
-
 	}
 
 	/**
@@ -149,48 +118,15 @@ public class ProfileManager
 	 * texte structuré comme expliqué pour {@link #recordProfiles()}.
 	 */
 	private static void loadProfiles()
-<<<<<<< HEAD
 	{
 		int profile_number = 0;
-		try {
+		try 
+		{
 			profile_number = DatabaseCommunication.getProfileNumber();
-		} catch (SQLException e1) {
+		} catch (SQLException e1)
+		{
 			e1.printStackTrace();
-=======
-	{	try
-		{	// on ouvre le fichier en lecture
-			FileInputStream fis = new FileInputStream(PROFILE_FILE);
-			InputStreamReader isr = new InputStreamReader(fis);
-			Scanner scanner = new Scanner(isr);
-			
-			int profileId = 0;
-			// on en lit chaque ligne
-			while(scanner.hasNext())
-			{	String line = scanner.nextLine();
-				String elem[] = line.split(SEPARATOR);
-				if(elem.length == PROFILE_FIELD_NBR)
-				{	// on crée le profil et on l'initialise
-					Profile profile = new Profile();
-					profile.profileId = profileId;
-					profile.userName = elem[0].trim();
-					profile.country = elem[1].trim();
-					profile.eloRank = Integer.parseInt(elem[2].trim());
-					profile.email = elem[3].trim();
-					profile.password = elem[4].trim();
-					profile.agent = elem[5].trim();
-					if(profile.agent.equals("null"))
-						profile.agent = null;
-					PROFILES.add(profile);
-				}
-				else
-					System.err.println("Erreur à la ligne "+(profileId+1)+" : elle contient " + elem.length + " éléments au lieu des "+PROFILE_FIELD_NBR+" attendus");
-				
-				profileId++;
-			}
-			
-			// on ferme le fichier
-			scanner.close();  
->>>>>>> refs/remotes/origin/master
+
 		}
 
 	for (int profileId = 0; profileId < profile_number; profileId++) {
