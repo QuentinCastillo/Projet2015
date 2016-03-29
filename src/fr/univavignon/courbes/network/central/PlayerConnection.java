@@ -55,7 +55,7 @@ public class PlayerConnection {
     
     public static boolean addPlayer(Profile profil)
     {
-          String query="Insert into player(id_player,pseudo,country,pswd)";
+          String query="Insert into player(id,pseudo,country,pswd)";
           query+=" values(default,?,?,?) RETURNING id_player";
           PreparedStatement prepare;
           Connection connection = connect();
@@ -64,12 +64,11 @@ public class PlayerConnection {
               prepare = connection.prepareStatement(query);
               prepare.setString(1,profil.userName);
               prepare.setString(2,profil.country);
-              prepare.setString(4,profil.password);
+              prepare.setString(3,profil.password);
               ResultSet result = prepare.executeQuery();
               if(result.next())
               {
                   profil.profileId = result.getInt(1);    
-                  System.out.println(result.getInt(1));
                   return true;
               }
               prepare.close();
