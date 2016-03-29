@@ -47,6 +47,7 @@ import fr.univavignon.courbes.inter.simpleimpl.remote.server.ServerGameRemotePla
 import fr.univavignon.courbes.inter.simpleimpl.remote.server.ServerGameRoundPanel;
 import fr.univavignon.courbes.network.ClientCommunication;
 import fr.univavignon.courbes.network.ServerCommunication;
+import fr.univavignon.courbes.inter.central.CentralPanel;
 
 /**
  * Menu principal du jeu.
@@ -166,6 +167,9 @@ public class MainWindow extends JFrame implements ErrorHandler, WindowListener
 		/** Aire de jeu d'une partie réseau côté client */
 		CLIENT_GAME_PLAY,
 		
+		/** Connexion serveur central */
+		CENTRAL_CONNECTION,
+		
 		/** Liste des profils */
 		PROFILE_LIST,
 		/** Affichage des statistiques */
@@ -225,6 +229,8 @@ public class MainWindow extends JFrame implements ErrorHandler, WindowListener
 				((ClientGameRoundPanel)currentPanel).start();
 				break;
 				
+			case CENTRAL_CONNECTION:
+				currentPanel= new CentralPanel(this);
 			// profils
 			case PROFILE_LIST:
 				currentPanel = new ProfileListPanel(this);
