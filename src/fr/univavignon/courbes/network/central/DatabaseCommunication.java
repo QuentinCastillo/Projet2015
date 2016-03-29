@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.sql.Statement;
+
 import fr.univavignon.courbes.common.Profile;
 //import fr.univavignon.courbes.inter.simpleimpl.profiles;
 import fr.univavignon.courbes.inter.simpleimpl.profiles.ProfileManager;
@@ -112,23 +114,38 @@ private static java.sql.Timestamp getCurrentTimeStamp() {
 /**
  * @return 
  * @return profile
+ * @throws SQLException 
  * */
-private static Profile getProfile(int playerid)
+private static Profile getProfile(int playerid) throws SQLException
 {
-	String query = "SELECT ?,?,?,?,? FROM player  WHERE id = playerid;";
+	String query = "SELECT ?,?,?,? FROM player  WHERE id = playerid";
 	  PreparedStatement state;
-
-	  state = conn.prepareStatement(query);
-	  state.setString(1,result.getString("name"));
-	  state.setString(2, pwd);
-	  state.setString(3, email);
-	  state.setString(4, country);
 	  
-	  Profile profile;
+	  state = conn.prepareStatement(query);
+	  
+	  state.setString(1,"name");
+	  state.setString(2,"pwd");
+	  state.setString(3,"email");
+	  state.setString(4,"country");
+	  
+	  ResultSet result = state.executeQuery();
+	  
+	  Profile profile = new Profile();
+	  
+	  profile.userName = result.getString("name");
+	  profile.password = result.getString("pwd");
+	  profile.email = result.getString("email");
+	  profile.country = result.getString("country");
+	  
 	return profile;
 }
 
-private static int getProfileNumber()
+/**
+ * 
+ * @return The number of profile
+ * @throws SQLException
+ */
+private static int getProfileNumber() throws SQLException
 {
 	Statement state = conn.createStatement();
 	ResultSet result = state.executeQuery("SELECT count(id) FROM player;");
