@@ -174,22 +174,18 @@ public static void setProfile(Profile profile) throws SQLException {
 public static Profile getProfile(int playerid) throws SQLException
 {
 	// 1 : d'abord on recupere les info du profile
-	String query = "SELECT ?,?,?,? FROM player  WHERE id = cast(? as integer)";
+	String query = "SELECT * FROM player  WHERE id = cast(? as integer)";
 	  PreparedStatement state;
 
 	  state = conn.prepareStatement(query);
 
-	  state.setString(1,"name");
-	  state.setString(2,"pwd");
-	  state.setString(3,"email");
-	  state.setString(4,"country");
-	  state.setInt(5, playerid);
+	  state.setInt(1, playerid);
 
 	  ResultSet result = state.executeQuery();
 
 	  Profile profile = new Profile();
 	  result.next();
-	  System.out.println(result);
+	  profile.profileId = playerid;
 	  profile.userName = result.getString("name");
 	  profile.password = result.getString("pwd");
 	  profile.email = result.getString("email");
