@@ -101,7 +101,7 @@ public static Profile insert_new_player(String name, String pwd, String country,
 
 		ProfileManager.addProfile(new_profile);
 
-		return Profile;
+		return new_profile;
 
   }
 
@@ -112,7 +112,7 @@ private static java.sql.Timestamp getCurrentTimeStamp() {
 
 	java.util.Date today = new java.util.Date();
 	return new java.sql.Timestamp(today.getTime());
-
+	
 }
 
 /**
