@@ -1,1 +1,1 @@
-package fr.univavignon.courbes.network.central
+package fr.univavignon.courbes.network.central;

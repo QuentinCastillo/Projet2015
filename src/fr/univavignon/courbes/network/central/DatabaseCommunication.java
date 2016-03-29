@@ -5,14 +5,16 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Timestamp;
+import fr.univavignon.courbes.common.Profile;
+import fr.univavignon.courbes.inter.simpleimpl.profiles;
+import fr.univavignon.courbes.inter.simpleimpl.profiles.ProfileManager;
 
 /**
  * @author gael
  * Cette classe gère la communication avec la base de données située sur
  * l'espace personnel uapv1402562
  */
-class DatabaseCommunication {
+public class DatabaseCommunication {
 	static Connection conn;
   /**
  * Cette fonction connecte le programme à la base de données
@@ -39,37 +41,61 @@ public static void connect_db()
   }
 
   /**
- * @param name
- * @param pwd
- * @throws SQLException 
+ * @param name player's name
+ * @param pwd player's password
+ * @param country player's country
+ * @param email player's email
+ * @throws SQLException //TODO: handle this 
  */
-public static void insert_new_player(String name, String pwd) throws SQLException
+public static void insert_new_player(String name, String pwd, String country, String email) throws SQLException
   {
-	  String query = "INSERT INTO ?(name, pwd) values(?,?) RETURNING playerid";
-	  PreparedStatement state; 
-	  
+	String query = "INSERT INTO ?(name, pwd, email, country) values(?,?,?,?) RETURNING playerid";
+	  PreparedStatement state;
+
+
 	  state = conn.prepareStatement(query);
 	  state.setString(1, "player");
 	  state.setString(2, name);
 	  state.setString(3, pwd);
-	  
+	  state.setString(4, email);
+	  state.setString(5, country);
+
 	  ResultSet result = state.executeQuery();
-	  
+
 	  int playerId = result.getInt("playerid");
-	  
-	  String[] tables = {"elo", "gamecount", "gamewon", "pointbygame", "pointbyround", "roundcount"};
-	  
-	  query = "INSERT INTO ?(id, _date, value) values(?,?,?) ";
+
+		Profile new_profile = new Profile();
+
+		query = "INSERT INTO ?(id, _date, value) values(?,?,?) ";
+		state = conn.prepareStatement(query);
+
+		state.setString(1, "elo");
+		state.setInt(2, playerId);
+		state.setTimestamp(3, getCurrentTimeStamp());
+		state.setInt(4, new_profile.eloRank);
+
+		String[] tables = {"gamecount", "gamewon", "pointbygame", "pointbyround", "roundcount"};
 	  for(String s : tables)
 	  {
 		  state = conn.prepareStatement(query);
-		  
+
 		  state.setString(1, s);
 		  state.setInt(2, playerId);
 		  state.setTimestamp(3, getCurrentTimeStamp());
 		  state.setInt(4, 0);
 	  }
-	  
+
+		new_profile.profileId = playerId;
+		new_profile.password = pwd;
+		new_profile.gameCount = 0;
+		new_profile.gameWon = 0;
+		new_profile.pointByGame = 0;
+		new_profile.pointByRound = 0;
+		new_profile.roundCount = 0;
+		
+		ProfileManager.addProfile(new_profile);
+		
+
   }
 
 /**
