@@ -47,8 +47,7 @@ public class Stats extends AbstractTableModel
 			row.add(profile.userName);
 			row.add(Integer.toString(profile.gameCount));
 			row.add(Integer.toString(profile.gameWon));
-			row.add(Integer.toString(profile.pointInGame));
-		//	row.add(Integer.toString(profile.pointInGame));
+			row.add(Integer.toString(profile.pointByGame));
 			rowdata.add(row);
 		}
 	}

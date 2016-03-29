@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.sql.SQLException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Scanner;
@@ -81,7 +82,11 @@ public class ProfileManager
 	public static void removeProfile(Profile profile)
 	{
 		PROFILES.remove(profile);
-		DatabaseCommunication.removeProfile(profile);
+		try {
+			DatabaseCommunication.removeProfile(profile);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
@@ -94,8 +99,13 @@ public class ProfileManager
 		{
 			if(profile.changed)
 			{
-				DatabaseCommunication.setProfile(profile);
-				profile.changed = false;
+				try {
+					DatabaseCommunication.setProfile(profile);
+					profile.changed = false;
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				
 			}
 		}
 
@@ -106,25 +116,28 @@ public class ProfileManager
 	 * texte structuré comme expliqué pour {@link #recordProfiles()}.
 	 */
 	private static void loadProfiles()
-	{	try
-		{
-			int profile_number = DatabaseCommunication.getProfileNumber();
-
-			for (int profileId = 0; profileId < profile_number; profileId++) {
-				Profile profile = DatabaseCommunication.getProfile(profileId);
-				profile.changed = false;
-				PROFILES.add(profile);
-			}
-
+	{
+		int profile_number = 0;
+		try {
+			profile_number = DatabaseCommunication.getProfileNumber();
+		} catch (SQLException e1) {
+			e1.printStackTrace();
 		}
 
-		catch (IOException e)
-		{	e.printStackTrace();
+	for (int profileId = 0; profileId < profile_number; profileId++) {
+		try {
+			Profile profile;
+			profile = DatabaseCommunication.getProfile(profileId);
+			profile.changed = false;
+			PROFILES.add(profile);
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
+	}
 	}
 
 	/**
-	 * Cherche le noms spécifié parmi les utilisateurs de la liste
+	 * Cherche le nom spécifié parmi les utilisateurs de la liste
 	 * et renvoie {@code true} s'il est trouvé.
 	 *
 	 * @param userName
@@ -139,7 +152,7 @@ public class ProfileManager
 		{	Profile profile = it.next();
 			found = userName.equalsIgnoreCase(profile.userName);
 		}
-		return false;
+		return found;
 	}
 
 	/**

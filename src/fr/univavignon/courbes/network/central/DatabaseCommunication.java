@@ -7,6 +7,7 @@ import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import fr.univavignon.courbes.common.Profile;
+import fr.univavignon.courbes.inter.simpleimpl.profiles.ProfileManager;
 
 
 /**
@@ -125,7 +126,13 @@ public static void removeProfile(Profile profile) throws SQLException {
 
 }
 
-public static void setProfile(Profile profile) {
+/**
+ * Udpates in the database the given Profile
+ * @param profile the profile to update
+ * @throws SQLException
+ */
+public static void setProfile(Profile profile) throws SQLException {
+	//On modifie la table player
 	String query = "UPDATE player SET (name, pwd, email, country) = (?,?,?,?)";
 	PreparedStatement state = conn.prepareStatement(query);
 	state.setString(1, profile.userName);
@@ -134,19 +141,30 @@ public static void setProfile(Profile profile) {
 	state.setString(4, profile.country);
 	state.executeQuery();
 
-	state = conn.prepareStatement(query);
+	String[] tables = {"elo", "gamecount", "gamewon", "pointbygame", "pointbyround", "roundcount"};
+	int[] values = {profile.eloRank, profile.gameCount, profile.gameWon, profile.pointByGame, profile.pointByRound, profile.roundCount};
 
+	//On insère de nouvelles valeurs dans les autres tables
+	for(int i = 0; i < tables.length; i++)
+	  {
+		  query = "INSERT INTO ?(playerid, date, value) VALUES(?,?,?)";
 
-	profile.eloRank
-	profile.partyNumber
-	profile.partyWon
-	profile.password
+		  state = conn.prepareStatement(query);
+
+		  state.setString(1, tables[i]);
+		  state.setInt(2, profile.profileId);
+		  state.setTimestamp(3, getCurrentTimeStamp());
+		  state.setInt(4, values[i]);
+		  state.executeQuery();
+	  }
+
 }
-/*
+
+/**
+ * @param playerid
  * @return
- * @return profile
  * @throws SQLException
- * */
+ */
 public static Profile getProfile(int playerid) throws SQLException
 {
 	String query = "SELECT ?,?,?,? FROM player  WHERE id = playerid";
@@ -178,13 +196,13 @@ public static Profile getProfile(int playerid) throws SQLException
  */
 public static int getProfileNumber() throws SQLException
 {
-	Statement state = conn.createStatement();
-	ResultSet result = state.executeQuery("SELECT count(id) FROM player;");
+	PreparedStatement state = conn.prepareStatement("SELECT count(id) FROM player;");
+	ResultSet result = state.executeQuery();
 
-    ResultSetMetaData resultMeta = result.getMetaData();
+    int count = result.getInt("count(id)");
 
 
-    return resultMeta.getColumnCount();
+    return count;
 }
 
 }
