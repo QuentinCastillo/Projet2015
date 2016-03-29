@@ -47,6 +47,7 @@ import fr.univavignon.courbes.inter.simpleimpl.remote.server.ServerGameRemotePla
 import fr.univavignon.courbes.inter.simpleimpl.remote.server.ServerGameRoundPanel;
 import fr.univavignon.courbes.network.ClientCommunication;
 import fr.univavignon.courbes.network.ServerCommunication;
+import fr.univavignon.courbes.network.central.DatabaseCommunication;
 import fr.univavignon.courbes.stats.GraphPanel;
 import fr.univavignon.courbes.stats.StatListPanel;
 import fr.univavignon.courbes.stats.Stats;
@@ -118,6 +119,8 @@ public class MainWindow extends JFrame implements ErrorHandler, WindowListener
 		setLocationRelativeTo(null);
 		addWindowListener(this);
 		setVisible(true);
+		
+		DatabaseCommunication.connect_db();
 	}
 	
 	/**

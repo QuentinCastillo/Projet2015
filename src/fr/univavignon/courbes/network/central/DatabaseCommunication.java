@@ -26,9 +26,9 @@ public class DatabaseCommunication {
 public static void connect_db()
   {
     try {
-     Class.forName("org.postgresql.Driver");
-
-     String url = "pedago02a.univ-avignon.fr";
+    //DriverManager.registerDriver(new org.postgresql.Driver());
+     //jdbc:postgresql:ProductDB&user=root&password=secret
+     String url = "jdbc:postgresql://pedago02a.univ-avignon.fr/etd";
      String user = "uapv1402562";
      String passwd = "M6V4rS";
 
