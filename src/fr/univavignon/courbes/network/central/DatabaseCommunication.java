@@ -116,7 +116,7 @@ private static java.sql.Timestamp getCurrentTimeStamp() {
  * @return profile
  * @throws SQLException 
  * */
-private static Profile getProfile(int playerid) throws SQLException
+public static Profile getProfile(int playerid) throws SQLException
 {
 	String query = "SELECT ?,?,?,? FROM player  WHERE id = playerid";
 	  PreparedStatement state;
@@ -145,7 +145,7 @@ private static Profile getProfile(int playerid) throws SQLException
  * @return The number of profile
  * @throws SQLException
  */
-private static int getProfileNumber() throws SQLException
+public static int getProfileNumber() throws SQLException
 {
 	Statement state = conn.createStatement();
 	ResultSet result = state.executeQuery("SELECT count(id) FROM player;");
