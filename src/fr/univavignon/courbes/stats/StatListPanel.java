@@ -38,7 +38,17 @@ public class StatListPanel extends JPanel implements ActionListener
 	private static final String DEFAULT_NAME = "Nom";
 	/** Pays par défaut pour le champ texte */
 	private static final String DEFAULT_COUNTRY = "Pays";
+	
+	/** Les id des joueurs à afficher dans la page suivante */
+	private int[] playerToShow; 
 
+
+	/**
+	 * @return the id of the players to show
+	 */
+	public int[] getPlayerToShow() {
+		return playerToShow;
+	}
 
 	/**
 	 * Crée un nouveau panel destiné à afficher la liste des profils.
@@ -130,5 +140,19 @@ public class StatListPanel extends JPanel implements ActionListener
 			mainWindow.displayPanel(PanelName.MAIN_MENU);
 		else if(e.getSource()==nextButton)
 			mainWindow.displayPanel(PanelName.STATS_GRAPHS);
+		
+		playerToShow = new int[statTable.getRowCount()];
+		int j = 0;
+		for(int i = 0; i < statTable.getRowCount(); i++)
+		{
+			Boolean checked = Boolean.valueOf(statTable.getValueAt(i, 5).toString());
+			System.out.println(checked);
+			if(checked)
+			{
+				playerToShow [j]= (int) statTable.getValueAt(i, 0);
+				j++;
+			}
+			
+		}
 	}
 }

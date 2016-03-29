@@ -41,11 +41,11 @@ public class Stats extends AbstractTableModel
 
 		// on définit les titres des colonnes
 		columnNames = new String[6];
-		columnNames[0] = "Rang ELO";
-		columnNames[1] = "Nom";
-		columnNames[2] = "Nombre de parties jouées";
-		columnNames[3] = "Nombre de parties gagnées";
-		columnNames[4] = "Nombre de points dans une partie";
+		columnNames[0] = "PlayerId";
+		columnNames[1] = "Rang ELO";
+		columnNames[2] = "Nom";
+		columnNames[3] = "Nombre de parties jouées";
+		columnNames[4] = "Nombre de parties gagnées";
 		columnNames[5] = "Choix";
 
 		// on définit le contenu de la table
@@ -57,20 +57,16 @@ public class Stats extends AbstractTableModel
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		JCheckBox[] checkBoxList = new JCheckBox[profileCount];
-		int i = 0;
 		for (Profile profile : profiles)
 		{	
 			List<Object> row = new ArrayList<Object>();
-			row.add(Integer.toString(profile.eloRank));
+			row.add(profile.profileId);
+			row.add(profile.eloRank);
 			row.add(profile.userName);
-			row.add(Integer.toString(profile.gameCount));
-			row.add(Integer.toString(profile.gameWon));
-			row.add(Integer.toString(profile.pointByGame));
-			// checkBoxList[i] = new JCheckBox("player" + profile.profileId);
-			// row.add(checkBoxList[i]);
+			row.add(profile.gameCount);
+			row.add(profile.gameWon);
+			row.add(false);
 			rowdata.add(row);
-			i++;
 		}
 	}
 
@@ -114,5 +110,35 @@ public class Stats extends AbstractTableModel
 	public String getColumnName(int c)
 	{	return columnNames[c];
 	}
+	
+	@Override
+	public Class getColumnClass(int c)
+	{
+		switch(c)
+		{
+		case 5:
+			return Boolean.class;
+		default:
+			return String.class;
+		}
+		
+	}
+	
+	 @Override
+	    public boolean isCellEditable(int row, int col) {
+	        if (col == 5) {
+	            return true;
+	        } else {
+	            return false;
+	        }
+	    }
+	 
+	 @Override
+	    public void setValueAt(Object aValue, int rowIndex, int columnIndex) {
+	        List<Object> L = rowdata.get(rowIndex);
+	        L.set(columnIndex, aValue);
+		 	rowdata.set(rowIndex, L); 
+	        fireTableCellUpdated(rowIndex, columnIndex);// notify listeners
+	 }
 
 }

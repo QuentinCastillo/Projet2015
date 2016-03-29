@@ -138,7 +138,7 @@ public static void removeProfile(Profile profile) throws SQLException {
  */
 public static void setProfile(Profile profile) throws SQLException {
 	//On modifie la table player
-	String query = "UPDATE player SET (name, pwd, email, country) = (?,?,?,?)";
+	String query = "UPDATE player SET (name, pwd, email, country) = (cast(? as VARCHAR(50)),(cast(? as VARCHAR(50)),(cast(? as VARCHAR(30)),(cast(? as VARCHAR(20)))";
 	PreparedStatement state = conn.prepareStatement(query);
 	state.setString(1, profile.userName);
 	state.setString(2, profile.password);
@@ -152,15 +152,14 @@ public static void setProfile(Profile profile) throws SQLException {
 	//On insère de nouvelles valeurs dans les autres tables
 	for(int i = 0; i < tables.length; i++)
 	  {
-		  query = "INSERT INTO ?(playerid, date, value) VALUES(?,?,?)";
-
+		  query = "INSERT INTO " + values[i] + "(id, _date, value) values(cast(? as integer),cast(? as Timestamp),cast(? as integer))";
 		  state = conn.prepareStatement(query);
 
-		  state.setString(1, tables[i]);
-		  state.setInt(2, profile.profileId);
-		  state.setTimestamp(3, getCurrentTimeStamp());
-		  state.setInt(4, values[i]);
-		  state.executeQuery();
+		  state.setInt(1, profile.profileId);
+		  state.setTimestamp(2, getCurrentTimeStamp());
+		  state.setInt(3, 0);
+		  state.executeUpdate();
+		  state.close();
 	  }
 
 }
