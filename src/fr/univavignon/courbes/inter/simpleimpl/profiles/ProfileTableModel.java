@@ -43,10 +43,11 @@ public class ProfileTableModel extends AbstractTableModel
 	{	rowdata = new ArrayList<List<String>>();
 
 		// on définit les titres des colonnes
-		columnNames = new String[4];
+		columnNames = new String[5];
 		columnNames[0] = "Pseudo";
 		columnNames[1] = "Pays";
-		columnNames[2] = "Rang ELO";
+		columnNames[2] = "email";
+		columnNames[3] = "Rang ELO";
 		
 		// on définit le contenu de la table
 		TreeSet<Profile> profiles = ProfileManager.getProfiles();
@@ -54,6 +55,7 @@ public class ProfileTableModel extends AbstractTableModel
 		{	List<String> row = new ArrayList<String>();
 			row.add(profile.userName);
 			row.add(profile.country);
+			row.add(profile.email);
 			row.add(Integer.toString(profile.eloRank));
 			rowdata.add(row);
 		}
@@ -74,6 +76,7 @@ public class ProfileTableModel extends AbstractTableModel
 	{	ArrayList<String> newRow = new ArrayList<String>();
 		newRow.add(profile.userName);
 		newRow.add(profile.country);
+		newRow.add(profile.email);
 		newRow.add(Integer.toString(profile.eloRank));
 		
 		rowdata.add(newRow);

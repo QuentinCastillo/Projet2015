@@ -44,6 +44,9 @@ public class ProfileManager
 	/** Liste des profils */
 	private static final TreeSet<Profile> PROFILES = new TreeSet<Profile>();
 
+	/** Nombre de champs à lire par profil */
+	private static final int PROFILE_FIELD_NBR = 6;
+	
 	/**
 	 * Renvoie la liste de tous profils disponibles. La méthode charge
 	 * cette liste si ce n'est pas déjà fait.
@@ -69,6 +72,7 @@ public class ProfileManager
 	{	Profile mx = Collections.max(PROFILES);
 		profile.profileId = mx.profileId + 1;
 		profile.changed = true;
+
 		PROFILES.add(profile);
 		recordProfiles();
 	}
@@ -105,10 +109,8 @@ public class ProfileManager
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}
-				
 			}
 		}
-
 	}
 
 	/**
@@ -118,10 +120,13 @@ public class ProfileManager
 	private static void loadProfiles()
 	{
 		int profile_number = 0;
-		try {
+		try 
+		{
 			profile_number = DatabaseCommunication.getProfileNumber();
-		} catch (SQLException e1) {
+		} catch (SQLException e1)
+		{
 			e1.printStackTrace();
+
 		}
 
 	for (int profileId = 0; profileId < profile_number; profileId++) {

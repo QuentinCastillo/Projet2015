@@ -34,6 +34,7 @@ import javax.swing.JPanel;
 
 import fr.univavignon.courbes.inter.simpleimpl.MainWindow.PanelName;
 import fr.univavignon.courbes.inter.simpleimpl.profiles.ProfileManager;
+import fr.univavignon.courbes.network.central.DatabaseCommunication;
 
 /**
  * Panel contenant le menu principal du jeu.
@@ -77,7 +78,9 @@ public class MainMenuPanel extends JPanel implements ActionListener
 	 * Initialisation du menu principal.
 	 */
 	public void initMenu()
-	{	BorderLayout borderLayout = new BorderLayout();
+	{	
+		DatabaseCommunication.connect_db();
+		BorderLayout borderLayout = new BorderLayout();
 		setLayout(borderLayout);
 
 		JPanel menuPanel = new JPanel();
