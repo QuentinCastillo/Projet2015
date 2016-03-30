@@ -32,6 +32,10 @@ import fr.univavignon.courbes.common.Direction;
 import fr.univavignon.courbes.common.ItemInstance;
 import fr.univavignon.courbes.common.Position;
 import fr.univavignon.courbes.common.Snake;
+import fr.univavignon.courbes.inter.simpleimpl.SettingsManager;
+import fr.univavignon.courbes.sounds.Audio;
+import fr.univavignon.courbes.sounds.AudioHandle;
+
 
 /**
  * Classe fille de {@link Snake}, permettant d'intégrer
@@ -366,6 +370,8 @@ public class PhysSnake extends Snake
 					double dist = Math.sqrt(Math.pow(item.x-pos.x,2)+Math.pow(item.y-pos.y,2));
 					if(dist<=Constants.ITEM_RADIUS)
 					{	// on indique qu'on a touché un item (pour sortir des deux boucles)
+						AudioHandle a = new Audio();
+						a.ItemCollision();
 						itemCollided = true;
 						// on le sort de la liste des items encore en jeu
 						it.remove();
@@ -387,6 +393,8 @@ public class PhysSnake extends Snake
 					|| pos.x<=Constants.BORDER_THICKNESS
 					|| pos.x>=boardWidth-Constants.BORDER_THICKNESS)
 				{	// on marque la collision
+					AudioHandle son = new Audio();
+					son.CollisionSound();
 					eliminatedBy = -1;
 					result = true;
 					// on restreint la nouvelle position du serpent
@@ -404,7 +412,10 @@ public class PhysSnake extends Snake
 				{	boolean changed = physicalTrail.removeAll(snake.oldTrail)
 						|| physicalTrail.removeAll(snake.newTrail);
 					if(changed)
-					{	eliminatedBy = i;
+					{	
+						AudioHandle son = new Audio();
+						son.CollisionSound();
+						eliminatedBy = i;
 						result = true;
 					}
 				}

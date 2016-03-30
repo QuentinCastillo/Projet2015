@@ -35,6 +35,10 @@ import fr.univavignon.courbes.common.ItemType;
 import fr.univavignon.courbes.common.Position;
 import fr.univavignon.courbes.common.SmallUpdate;
 import fr.univavignon.courbes.common.Snake;
+import fr.univavignon.courbes.inter.simpleimpl.SettingsManager;
+import fr.univavignon.courbes.sounds.Audio;
+import fr.univavignon.courbes.sounds.AudioHandle;
+
 
 /**
  * Classe fille de {@link Board}, permettant d'intégrer
@@ -47,7 +51,6 @@ public class PhysBoard extends Board
 	private static final long serialVersionUID = 1L;
 	/** Générateur aléatoire utilisé lors de l'apparition d'items */
 	private static final Random RANDOM = new Random();
-	
 	/**
 	 * Constructeur nécessaire pour le mode réseau utilisant
 	 * Kryonet. Ne pas utiliser ce constructeur.
@@ -142,7 +145,9 @@ public class PhysBoard extends Board
 	 * 		Nombre de joueurs participants à la manche.
 	 */
 	public void init(int playerNbr)
-	{	snakes = new Snake[playerNbr];
+	{	
+		
+		snakes = new Snake[playerNbr];
 		for(int i=0;i<playerNbr;i++)
 		{	PhysSnake snake = new PhysSnake(i,this);
 			snakes[i] = snake;
@@ -341,6 +346,8 @@ public class PhysBoard extends Board
 			snake.newTrail.clear();
 			snake.clearedTrail = true;
 		}
+		
+		
 	}
 	
 	/**

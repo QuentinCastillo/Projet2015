@@ -28,7 +28,10 @@ import fr.univavignon.courbes.common.Profile;
 import fr.univavignon.courbes.inter.simpleimpl.AbstractRoundPanel;
 import fr.univavignon.courbes.inter.simpleimpl.MainWindow;
 import fr.univavignon.courbes.inter.simpleimpl.MainWindow.PanelName;
+
 import fr.univavignon.courbes.inter.simpleimpl.profiles.ProfileManager;
+import fr.univavignon.courbes.sounds.Audio;
+import fr.univavignon.courbes.sounds.AudioHandle;
 
 /**
  * Panel utilisé pour afficher le jeu proprement dit,
@@ -53,7 +56,10 @@ public class LocalGameRoundPanel extends AbstractRoundPanel
 
 	@Override
 	public void run()
-	{	playMatch();
+	{	
+		
+		
+		playMatch();
 		
 		// TODO la mise à jour des stats devrait être faite ici
 		Player[] players = round.players;

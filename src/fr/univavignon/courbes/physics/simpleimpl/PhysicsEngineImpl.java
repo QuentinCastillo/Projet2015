@@ -25,6 +25,8 @@ import fr.univavignon.courbes.common.Direction;
 import fr.univavignon.courbes.common.SmallUpdate;
 import fr.univavignon.courbes.common.UpdateInterface;
 import fr.univavignon.courbes.physics.PhysicsEngine;
+import fr.univavignon.courbes.sounds.Audio;
+import fr.univavignon.courbes.sounds.AudioHandle;
 
 /**
  * Immplémentation de l'interface {@link PhysicsEngine}, i.e.
@@ -39,8 +41,10 @@ public class PhysicsEngineImpl implements PhysicsEngine
 	private PhysBoard board;
 	
 	@Override
+
 	public void init(int playerNbr, int width, int height)
 	{	board = new PhysBoard(width,height);
+
 		board.init(playerNbr);
 	}
 	

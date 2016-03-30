@@ -25,6 +25,8 @@ import javax.swing.UIManager.LookAndFeelInfo;
 import fr.univavignon.courbes.inter.simpleimpl.MainWindow;
 import fr.univavignon.courbes.inter.simpleimpl.SettingsManager;
 import fr.univavignon.courbes.network.central.DatabaseCommunication;
+import fr.univavignon.courbes.sounds.Audio;
+import fr.univavignon.courbes.sounds.AudioHandle;
 
 /**
  * Classe principale chargée du lancement du jeu.
@@ -45,7 +47,12 @@ public class Launcher extends JFrame
 	 * 		Une Exception queconque... 
 	 */
 	public static void main(String[] args) throws Exception
-	{	// on charge les options du jeu qui avaient été stockées dans un fichier texte
+	{	
+		AudioHandle son = new Audio();
+		son.IntroSong();
+		
+		
+		// on charge les options du jeu qui avaient été stockées dans un fichier texte
 		SettingsManager.loadSettings();
 		
 		// on change le look'n'feel Java
@@ -53,6 +60,7 @@ public class Launcher extends JFrame
 		
 		//On lance la connection avec la base de données
 		DatabaseCommunication.connect_db();
+		// song test 
 		
 		// on crée la fenêtre principale, qui lance le jeu
 		new MainWindow();
