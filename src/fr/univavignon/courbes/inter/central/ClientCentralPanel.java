@@ -18,8 +18,15 @@ import fr.univavignon.courbes.network.kryonet.ClientCommunicationKryonetImpl;
 import fr.univavignon.courbes.network.simpleimpl.client.ClientCommunicationImpl;
 
 
+/**
+ * @author chris
+ *
+ */
 public class ClientCentralPanel extends AbstractConnectionPanel implements ClientConnectionHandler
 {
+	/**
+	 * Panel Title
+	 */
 	private static final String TITLE = "Connexion au serveur";
 	
 	
@@ -28,6 +35,9 @@ public class ClientCentralPanel extends AbstractConnectionPanel implements Clien
 	}
 	
 	
+	/**
+	 * @return true if connected
+	 */
 	private boolean connect()
 	{	// on initialise le Moteur Réseau
 		ClientCommunication clientCom = null;

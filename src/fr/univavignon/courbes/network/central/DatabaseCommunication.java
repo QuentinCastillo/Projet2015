@@ -49,7 +49,7 @@ public static void connect_db()
  * @param pwd player's password
  * @param country player's country
  * @param email player's email
- * @return
+ * @return the inserted profile
  * @throws SQLException //TODO: handle this
  */
 public static Profile insert_new_player(String name, String pwd, String country, String email) throws SQLException
@@ -180,7 +180,7 @@ public static void setProfile(Profile profile) throws SQLException {
 
 /**
  * @param playerid
- * @return
+ * @return the required profile
  * @throws SQLException
  */
 public static Profile getProfile(int playerid) throws SQLException

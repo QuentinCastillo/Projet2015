@@ -32,6 +32,9 @@ public class GraphPanel extends JPanel {
 		init();
 	}
 
+	/**
+	 * Initialize the Panel
+	 */
 	private void init() {
 		
 		StatGraph myCHart = new StatGraph(null, null, null, null, null);

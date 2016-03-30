@@ -8,8 +8,17 @@ import javax.sound.sampled.*;
 public class Audio extends Thread implements AudioHandle{
      
      
+    /**
+     * The input stream for audio
+     */
     AudioInputStream audioInputStream = null;
+    /**
+     * 
+     */
     SourceDataLine line;
+    /**
+     * 
+     */
     String name;
     
     public Audio(){
@@ -18,49 +27,57 @@ public class Audio extends Thread implements AudioHandle{
     
 
     
-    public void CollisionSound()
+    @Override
+	public void CollisionSound()
     {
     	this.name = "res/sounds/collision.wav";
     	start();
     	
     }
     
-    public void MusicInGame()
+    @Override
+	public void MusicInGame()
     {
     	this.name = "res/sounds/music2.wav";
     	start();
 
     }
     
-    public void ItemCreated()
+    @Override
+	public void ItemCreated()
     {
     	this.name = "res/sounds/pop.wav";
     	start();
     }
     
-    public void ItemCollision()
+    @Override
+	public void ItemCollision()
     {
     	this.name = "res/sounds/item.wav";
     	start();
     }
     
-    public void IntroSong()
+    @Override
+	public void IntroSong()
     {
     	this.name = "res/sounds/intro.wav";
     	start();
     }
     
-    public void Terminate(){
+    @Override
+	public void Terminate(){
     	this.stop();
     }
     
-    public void Button()
+    @Override
+	public void Button()
     {
     	this.name = "res/sounds/button.wav";
     	start();
     }
     
-    public void run(){
+    @Override
+	public void run(){
         File fichier = new File(name);
 
         try {

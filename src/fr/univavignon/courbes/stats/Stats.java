@@ -112,7 +112,7 @@ public class Stats extends AbstractTableModel
 	}
 	
 	@Override
-	public Class getColumnClass(int c)
+	public Class<?> getColumnClass(int c)
 	{
 		switch(c)
 		{
