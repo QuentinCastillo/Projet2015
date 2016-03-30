@@ -29,7 +29,7 @@ public class PlayerConnection {
     
     public static boolean playerConnect(String user, String pswd)
     {
-          String query="Select * from player where pseudo=? and password=? ";
+          String query="Select * from player where name=? and pwd=? ";
           Connection connection=connect();
           if(connection != null) {
               try {
@@ -50,7 +50,7 @@ public class PlayerConnection {
     
     public static boolean addPlayer(Profile profil)
     {
-          String query="Insert into player_waiting(id,pseudo,country,pswd)";
+          String query="Insert into player_waiting(id,name,country,pswd)";
           query+=" values(default,?,?,?) RETURNING id";
           PreparedStatement prepare;
           Connection connection = connect();

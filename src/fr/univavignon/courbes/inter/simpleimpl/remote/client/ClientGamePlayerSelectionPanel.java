@@ -139,7 +139,8 @@ public class ClientGamePlayerSelectionPanel extends AbstractLocalPlayerSelection
 			{	
 				JFrame frame = new JFrame("Password");
 				String pswd = JOptionPane.showInputDialog(frame, "Quel est ton mot de passe");
-				if(PlayerConnection.playerConnect(player.profile.agent,pswd))
+				System.out.println(player.profile.userName);
+				if(PlayerConnection.playerConnect(player.profile.userName,pswd))
 				{
 					mainWindow.displayPanel(PanelName.CLIENT_CENTRAL_CONNECTION);
 				}
