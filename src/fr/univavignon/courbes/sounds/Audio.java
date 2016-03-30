@@ -38,7 +38,7 @@ public class Audio extends Thread implements AudioHandle{
     @Override
 	public void MusicInGame()
     {
-    	this.name = "res/sounds/music2.wav";
+    	this.name = "res/sounds/musicGood.wav";
     	start();
 
     }
@@ -60,7 +60,7 @@ public class Audio extends Thread implements AudioHandle{
     @Override
 	public void IntroSong()
     {
-    	this.name = "res/sounds/intro.wav";
+    	this.name = "res/sounds/intro2.wav";
     	start();
     }
     
@@ -80,6 +80,47 @@ public class Audio extends Thread implements AudioHandle{
 	public void run(){
         File fichier = new File(name);
 
+        if(name.equals("res/sounds/musicGood.wav"))
+        		{
+        	try {
+                audioInputStream = AudioSystem.getAudioInputStream(fichier);
+            } catch (UnsupportedAudioFileException e) {
+                e.printStackTrace();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+             
+             AudioFormat audioFormat = audioInputStream.getFormat();
+             DataLine.Info info = new DataLine.Info(SourceDataLine.class,audioFormat);
+              
+             try {
+                 line = (SourceDataLine) AudioSystem.getLine(info);
+                            
+                 } catch (LineUnavailableException e) {
+                   e.printStackTrace();
+                   return;
+                 }
+             
+            
+              
+            try {
+                    line.open(audioFormat);
+            } catch (LineUnavailableException e) {
+                        e.printStackTrace();
+                        return;
+            }
+            line.start();
+            try {
+                byte bytes[] = new byte[1024];
+                int bytesRead=0;
+                while ((bytesRead = audioInputStream.read(bytes, 0, bytes.length)) != -1) {
+                     line.write(bytes, 0, bytesRead);
+                    }
+            } catch (IOException io) {
+                io.printStackTrace();
+                return;
+            }
+        		}
         try {
             audioInputStream = AudioSystem.getAudioInputStream(fichier);
         } catch (UnsupportedAudioFileException e) {

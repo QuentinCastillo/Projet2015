@@ -51,7 +51,7 @@ public class StatGraph extends ApplicationFrame{
 	/**
 	 * @param player2 
 	 * @param player1 
-	 * @return
+	 * @return 
 	 */
 	private XYDataset createDataset(Profile player1, Profile player2, String stat) {
 		//ResulSet result = DatabaseCommunication.getStat(stat, player1);
