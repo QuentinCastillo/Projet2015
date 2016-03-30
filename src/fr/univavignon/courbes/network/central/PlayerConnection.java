@@ -12,14 +12,12 @@ public class PlayerConnection {
 	public static Connection connect()
     {
       try {
-       Class.forName("org.postgresql.Driver");
+    	  String url = "jdbc:postgresql://pedago02a.univ-avignon.fr/etd";
+    	     String user = "uapv1402562";
+    	     String passwd = "M6V4rS";
 
-       String url = "pedago02a.univ-avignon.fr";
-       String user = "uapv1402562";
-       String passwd = "M6V4rS";
-
-       Connection connection = DriverManager.getConnection(url, user, passwd);
-       return connection;
+    	     Connection connect = DriverManager.getConnection(url, user, passwd);
+       return connect;
       }
       
       catch(Exception e)
