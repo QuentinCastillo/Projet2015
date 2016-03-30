@@ -96,7 +96,10 @@ public static Profile insert_new_player(String name, String pwd, String country,
 	  }
 
 		new_profile.profileId = playerId;
+		new_profile.userName = name;
 		new_profile.password = pwd;
+		new_profile.email = email;
+		new_profile.country = country;
 		new_profile.gameCount = 0;
 		new_profile.gameWon = 0;
 		new_profile.pointByGame = 0;
@@ -127,8 +130,18 @@ private static java.sql.Timestamp getCurrentTimeStamp() {
 public static void removeProfile(Profile profile) throws SQLException {
 	String query = "DELETE FROM player WHERE id = " + profile.profileId;
 	PreparedStatement state = conn.prepareStatement(query);
-	state.executeQuery();
-
+	state.executeUpdate();
+	state.close();
+	
+	String[] tables = {"elo", "gamecount", "gamewon", "pointbygame", "pointbyround", "roundcount"};
+	
+	for(int i = 0; i < tables.length; i++)
+	  {
+		  query = "DELETE FROM " + tables[i] + " WHERE id = " + profile.profileId;
+		  state = conn.prepareStatement(query);
+		  state.executeUpdate();
+		  state.close();
+	  }
 }
 
 /**
@@ -138,13 +151,14 @@ public static void removeProfile(Profile profile) throws SQLException {
  */
 public static void setProfile(Profile profile) throws SQLException {
 	//On modifie la table player
-	String query = "UPDATE player SET (name, pwd, email, country) = (cast(? as VARCHAR(50)),(cast(? as VARCHAR(50)),(cast(? as VARCHAR(30)),(cast(? as VARCHAR(20)))";
+	String query = "UPDATE player SET (name, pwd, email, country) = (cast(? as VARCHAR(50)), cast(? as VARCHAR(50)), cast(? as VARCHAR(30)), cast(? as VARCHAR(20)))";
 	PreparedStatement state = conn.prepareStatement(query);
 	state.setString(1, profile.userName);
 	state.setString(2, profile.password);
 	state.setString(3, profile.email);
 	state.setString(4, profile.country);
-	state.executeQuery();
+	state.executeUpdate();
+	state.close();
 
 	String[] tables = {"elo", "gamecount", "gamewon", "pointbygame", "pointbyround", "roundcount"};
 	int[] values = {profile.eloRank, profile.gameCount, profile.gameWon, profile.pointByGame, profile.pointByRound, profile.roundCount};
@@ -152,12 +166,12 @@ public static void setProfile(Profile profile) throws SQLException {
 	//On insère de nouvelles valeurs dans les autres tables
 	for(int i = 0; i < tables.length; i++)
 	  {
-		  query = "INSERT INTO " + values[i] + "(id, _date, value) values(cast(? as integer),cast(? as Timestamp),cast(? as integer))";
+		  query = "INSERT INTO " + tables[i] + "(id, _date, value) values(cast(? as integer),cast(? as Timestamp),cast(? as integer))";
 		  state = conn.prepareStatement(query);
 
 		  state.setInt(1, profile.profileId);
 		  state.setTimestamp(2, getCurrentTimeStamp());
-		  state.setInt(3, 0);
+		  state.setInt(3, values[i]);
 		  state.executeUpdate();
 		  state.close();
 	  }

@@ -146,7 +146,6 @@ public class StatListPanel extends JPanel implements ActionListener
 		for(int i = 0; i < statTable.getRowCount(); i++)
 		{
 			Boolean checked = Boolean.valueOf(statTable.getValueAt(i, 5).toString());
-			System.out.println(checked);
 			if(checked)
 			{
 				playerToShow [j]= (int) statTable.getValueAt(i, 0);

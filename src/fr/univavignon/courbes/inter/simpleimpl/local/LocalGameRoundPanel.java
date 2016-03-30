@@ -24,9 +24,11 @@ import java.util.List;
 import fr.univavignon.courbes.common.Constants;
 import fr.univavignon.courbes.common.Direction;
 import fr.univavignon.courbes.common.Player;
+import fr.univavignon.courbes.common.Profile;
 import fr.univavignon.courbes.inter.simpleimpl.AbstractRoundPanel;
 import fr.univavignon.courbes.inter.simpleimpl.MainWindow;
 import fr.univavignon.courbes.inter.simpleimpl.MainWindow.PanelName;
+import fr.univavignon.courbes.inter.simpleimpl.profiles.ProfileManager;
 
 /**
  * Panel utilisé pour afficher le jeu proprement dit,
@@ -54,6 +56,18 @@ public class LocalGameRoundPanel extends AbstractRoundPanel
 	{	playMatch();
 		
 		// TODO la mise à jour des stats devrait être faite ici
+		Player[] players = round.players;
+		
+		for(Player player : players)
+		{
+			Profile profile = player.profile;
+			profile.pointByGame = player.totalScore; 
+			// On stocke le score totale dans point by game
+			// Puis on met à jour le profil dans PROFILES
+			ProfileManager.updateProfile(profile);
+			
+		}
+		ProfileManager.recordProfiles();
 		
 		// on repart au menu principal
 		mainWindow.currentRound = null;

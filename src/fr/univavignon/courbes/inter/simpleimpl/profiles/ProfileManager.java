@@ -72,7 +72,6 @@ public class ProfileManager
 		profile.changed = true;
 
 		PROFILES.add(profile);
-		recordProfiles();
 	}
 
 	/**
@@ -95,7 +94,7 @@ public class ProfileManager
 	 * Enregistre la liste des profils dans la base de données
 	 * Grâce à la fonction setProfile(Profile) de la classe DatabaseCommunication
 	 */
-	private static void recordProfiles()
+	public static void recordProfiles()
 	{
 		for(Profile profile: PROFILES)
 		{
@@ -109,6 +108,17 @@ public class ProfileManager
 				}
 			}
 		}
+	}
+	
+	/**
+	 * Met à jour un profil existant mais ne met pas à jour la base de données
+	 * @param profile 
+	 */
+	public static void updateProfile(Profile profile)
+	{
+		PROFILES.remove(getProfile(profile.profileId));
+		profile.changed = true;
+		PROFILES.add(profile);
 	}
 
 	/**
@@ -127,13 +137,13 @@ public class ProfileManager
 
 		}
 
-	for (int profileId = 0; profileId < profile_number; profileId++) {
+	for (int profileId = 0; profileId <= profile_number; profileId++) {
 		try {
 			Profile profile;
 			profile = DatabaseCommunication.getProfile(profileId);
 			if(profile != null)
 			{
-				profile.changed = false;
+				profile.changed = true;
 				PROFILES.add(profile);
 			}
 		} catch (SQLException e) {

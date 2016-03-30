@@ -74,6 +74,7 @@ public class ProfileTableModel extends AbstractTableModel
 	 */
 	public void addProfile(Profile profile)
 	{	ArrayList<String> newRow = new ArrayList<String>();
+	System.out.println(profile.userName);
 		newRow.add(profile.userName);
 		newRow.add(profile.country);
 		newRow.add(profile.email);
