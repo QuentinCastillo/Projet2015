@@ -29,7 +29,7 @@ public class PlayerConnection {
     
     public static boolean playerConnect(String user, String pswd)
     {
-          String query="Select * from player where name=? and pswd=? ";
+          String query="Select * from player where name=? and pwd=? ";
           Connection connection=connect();
           if(connection != null) {
               try {

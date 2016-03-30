@@ -7,9 +7,9 @@ Create table partie
 	nb_max_players INT
 );
 
-Drop table player;
+Drop table joueur;
 
-Create table player
+Create table joueur
 (
 	id Serial primary key,
 	pseudo varchar(50),
