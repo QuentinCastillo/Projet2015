@@ -24,6 +24,7 @@ import java.awt.event.ItemListener;
 
 import javax.swing.BoxLayout;
 import javax.swing.JCheckBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
@@ -33,6 +34,7 @@ import fr.univavignon.courbes.inter.simpleimpl.MainWindow;
 import fr.univavignon.courbes.inter.simpleimpl.MainWindow.PanelName;
 import fr.univavignon.courbes.inter.simpleimpl.local.AbstractLocalPlayerSelectionPanel;
 import fr.univavignon.courbes.inter.simpleimpl.local.LocalPlayerConfigPanel;
+import fr.univavignon.courbes.network.central.PlayerConnection;
 
 /**
  * Panel permettant de sélectionner les joueurs participant à une partie réseau côté client.
@@ -134,10 +136,18 @@ public class ClientGamePlayerSelectionPanel extends AbstractLocalPlayerSelection
 				mainWindow.displayPanel(PanelName.CLIENT_GAME_CONNECTION);
 			// connexion via le central
 			else
-			{	System.out.println("Fonctionnalité pas encore implémentée");
-				// TODO à compléter avec le traitement relatif au serveur central :
-				// il faut afficher un panel qui va se connecter au central et faire le traitement approprié
-				//mainWindow.displayPanel(PanelName.XXXXXXXXXX);
+			{	
+				JFrame frame = new JFrame("Password");
+				String pswd = JOptionPane.showInputDialog(frame, "Quel est ton mot de passe");
+				if(PlayerConnection.playerConnect(player.profile.agent,pswd))
+				{
+					mainWindow.displayPanel(PanelName.CLIENT_CENTRAL_CONNECTION);
+				}
+				else
+				{
+					JOptionPane.showMessageDialog
+				    (mainWindow,"<html>Le mot de passe ne correspont pas au pseudo.<br></html>");
+				}
 			}
 		}
 		else

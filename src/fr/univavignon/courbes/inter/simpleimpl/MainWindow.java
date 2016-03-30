@@ -51,6 +51,7 @@ import fr.univavignon.courbes.network.central.DatabaseCommunication;
 import fr.univavignon.courbes.stats.GraphPanel;
 import fr.univavignon.courbes.stats.StatListPanel;
 import fr.univavignon.courbes.stats.Stats;
+import fr.univavignon.courbes.inter.central.ClientCentralPanel;
 
 /**
  * Menu principal du jeu.
@@ -170,6 +171,9 @@ public class MainWindow extends JFrame implements ErrorHandler, WindowListener
 		/** Aire de jeu d'une partie réseau côté client */
 		CLIENT_GAME_PLAY,
 		
+		/** Connexion du client au serveur central */
+		CLIENT_CENTRAL_CONNECTION,
+		
 		/** Liste des profils */
 		PROFILE_LIST,
 		/** Affichage des statistiques */
@@ -231,6 +235,9 @@ public class MainWindow extends JFrame implements ErrorHandler, WindowListener
 				((ClientGameRoundPanel)currentPanel).start();
 				break;
 				
+			case CLIENT_CENTRAL_CONNECTION:
+				currentPanel= new ClientCentralPanel(this);
+				break;
 			// profils
 			case PROFILE_LIST:
 				currentPanel = new ProfileListPanel(this);

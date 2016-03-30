@@ -33,6 +33,7 @@ import fr.univavignon.courbes.inter.simpleimpl.SettingsManager.NetEngineImpl;
 import fr.univavignon.courbes.inter.simpleimpl.SettingsManager;
 import fr.univavignon.courbes.inter.simpleimpl.remote.AbstractConnectionPanel;
 import fr.univavignon.courbes.network.ServerCommunication;
+import fr.univavignon.courbes.network.central.PublicGameConnection;
 import fr.univavignon.courbes.network.kryonet.ServerCommunicationKryonetImpl;
 import fr.univavignon.courbes.network.simpleimpl.server.ServerCommunicationImpl;
 
@@ -129,6 +130,10 @@ public class ServerGamePortSelectionPanel extends AbstractConnectionPanel implem
 		SettingsManager.setLastPort(port);
 		mainWindow.serverCom.setPort(port);
 	
+		if(publicBox.isSelected())
+		{
+			PublicGameConnection.createPublicGame();
+		}
 		mainWindow.displayPanel(PanelName.SERVER_GAME_LOCAL_PLAYER_SELECTION);
 	}
 
