@@ -11,7 +11,7 @@ import fr.univavignon.courbes.common.Snake;
 
 public class AgentImpl extends Agent
 {
-
+	
 	public AgentImpl(Integer playerId) 
 	{
 		super(playerId);
