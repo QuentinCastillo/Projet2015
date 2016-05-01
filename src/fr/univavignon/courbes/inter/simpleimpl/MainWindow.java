@@ -106,7 +106,7 @@ public class MainWindow extends JFrame implements ErrorHandler, WindowListener
 		setPreferredSize(dim);
 		setMinimumSize(dim);
 		setMaximumSize(dim);
-		setResizable(false);
+		setResizable(true);
 		
 		mainMenuPanel = new MainMenuPanel(this);
 		currentPanel = mainMenuPanel;

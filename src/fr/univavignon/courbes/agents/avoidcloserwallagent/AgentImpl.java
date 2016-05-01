@@ -24,6 +24,7 @@ import java.util.TreeSet;
 import fr.univavignon.courbes.agents.Agent;
 import fr.univavignon.courbes.common.Board;
 import fr.univavignon.courbes.common.Direction;
+import fr.univavignon.courbes.common.ItemType;
 import fr.univavignon.courbes.common.Position;
 import fr.univavignon.courbes.common.Snake;
 
@@ -73,6 +74,7 @@ public class AgentImpl extends Agent
 		if(timeBeforeDirChange>0)
 		{	timeBeforeDirChange = timeBeforeDirChange - getElapsedTime();
 			result = previousDirection;
+			
 		}
 		
 		else
@@ -88,8 +90,10 @@ public class AgentImpl extends Agent
 				
 				// si le serpent est dans un coin : il faut éviter qu'il alterne gauche et droite donc on force l'un des deux
 				if(previousDirection!=Direction.NONE && isInCorner())
+				{
 					result = previousDirection;
-				
+					
+				}
 				// si on n'est pas dans un coin
 				else
 				{	updateAngles();
