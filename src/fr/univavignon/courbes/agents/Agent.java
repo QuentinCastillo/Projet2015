@@ -114,7 +114,7 @@ public abstract class Agent implements Callable<Direction>
 	// DONNEES
 	/////////////////////////////////////////////////////////////////
 	/** Numéro du joueur contrôlé par cet agent dans la partie courante */
-	private int playerId;
+	protected int playerId;
 	/** Temps écoulé depuis la dernière mise à jour, exprimé en ms */
 	private long elapsedTime;
 	/** Copie de l'aire de jeu courante */

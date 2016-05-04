@@ -11,17 +11,23 @@ import fr.univavignon.courbes.common.Snake;
 
 public class AgentImpl extends Agent
 {
+	private static Direction LEFT = Direction.LEFT;
+	private static Direction RIGHT = Direction.RIGHT;
 
-	public AgentImpl(Integer playerId) 
+
+	public AgentImpl(Integer playerId)
 	{
 		super(playerId);
-		
+
 	}
 
 	@Override
 	public Direction processDirection() {
-		
+
 		return null;
-	}	
-	
+	}
+
+
+
+
 }
