@@ -45,54 +45,14 @@ public class AgentImpl extends Agent
 		// TODO Auto-generated method stub
 		return null;
 	}
-		
 	
-	public void checkObjectEffect()
-	{ 
-		checkInterruption();	// on doit tester l'interruption au début de chaque méthode
-		
-		ItemType item = null ;			// item tmp "affecté"  au snake
-		
-		if(agentSnake.currentItems != null) /*s'il a pris un (ou plusieurs?) item*/
-		{
-			if(item == ItemType.USER_FAST) /*si c'est USER_FAST*/
-			{
-				// alors on modif l'angle pour tourner	
-				currentAngle = agentSnake.currentAngle  * ANGLE_WIDTH;
-				// augmente la vigilance
-				// on change CORNER_THRESHOLD?
-			}
-			else if(item == ItemType.USER_SLOW) /*si c'est USER_SLOW*/
-			{
-				// alors on modif l'angle pour tourner	
-				currentAngle = agentSnake.currentAngle / ANGLE_WIDTH;
-				
-				// augmente la vigilance
-				// on change CORNER_THRESHOLD?
-			}
-			else if (item == ItemType.COLLECTIVE_TRAVERSE)/*si y a plus de bordure COLLECTIVE_TRAVERSE*/
-			{
-				// pas de modif sur les angles, mais les conditions sur les bordures disparaissent
-				// utilisation de la var bool hasBorder;
-			}
-		}
-		else if (agentSnake.fly)
-		{
-			// calcule l'endroit le plus safe et on y vaaaaaaa
-				
-		}
-		else if(agentSnake.inversion)
-		{
-				/*Direction result = Direction.NONE;
-				if(result == Direction.LEFT) result = Direction.RIGHT;
-				else result = Direction.LEFT;*/
-				
-				if(direction_agent == Direction.LEFT) direction_agent = Direction.RIGHT;
-				else direction_agent = Direction.LEFT;
-		}
-					
+	public Direction aggression()
+	{
+		Direction toTake = Direction.NONE;
+		//checker les scores, recup le serpent qui a le plus haut score
+		//recup la position de ce serpent + prevision
+		//on fonce dessus : return RIGHT ou LEFT
+		return toTake;
 	}
-
-
 	
 }
