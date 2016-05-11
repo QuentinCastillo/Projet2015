@@ -7,7 +7,9 @@ import fr.univavignon.courbes.agents.Agent;
 import fr.univavignon.courbes.common.Board;
 import fr.univavignon.courbes.common.Direction;
 import fr.univavignon.courbes.common.ItemType;
+import fr.univavignon.courbes.common.Player;
 import fr.univavignon.courbes.common.Position;
+import fr.univavignon.courbes.common.Round;
 import fr.univavignon.courbes.common.Snake;
 
 public class AgentImpl extends Agent
@@ -26,7 +28,6 @@ public class AgentImpl extends Agent
 	
 	/** Serpent contrôlé par l'agent */
 	private Snake agentSnake;
-
 
 	/** Direction courante du serpent de l'agent */
 	private double currentAngle;
@@ -48,11 +49,31 @@ public class AgentImpl extends Agent
 	
 	public Direction aggression()
 	{
+		checkInterruption();
+		
 		Direction toTake = Direction.NONE;
+		Board board = getBoard();
+		
+		int maxIdx = 0;
+		
 		//checker les scores, recup le serpent qui a le plus haut score
+		for(int i=0; i<board.snakes.length ;i++)
+		{	checkInterruption();
+		
+			Snake snake = board.snakes[i];			
+			// on traite seulement les serpents des autres joueurs
+			if(i != getPlayerId())
+			{
+				i = snake.playerId;
+				//Player[] players.getPlayerId() = i			
+				//if(players[i].roundScore>players[maxIdx].roundScore)
+					maxIdx = i;
+			}
+		}
+		System.out.println("valMax:"+maxIdx);
+		
 		//recup la position de ce serpent + prevision
 		//on fonce dessus : return RIGHT ou LEFT
 		return toTake;
 	}
-	
 }
