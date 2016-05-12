@@ -64,13 +64,19 @@ public class AgentImpl extends Agent
 			// on traite seulement les serpents des autres joueurs
 			if(i != getPlayerId())
 			{
-				i = snake.playerId;
-				//Player[] players.getPlayerId() = i			
-				//if(players[i].roundScore>players[maxIdx].roundScore)
-					maxIdx = i;
+				// Je n'arrive pas a recup le score des snakes , 
+				//il faut relier le playerId du snake dans un tableau de player ?
+				
+				/*players.playerId = snake.playerId;				
+				Player[] players.getPlayerId() = i
+				if(players.totalScore > maxIdx)
+					maxIdx = i;*/
+						
+				//deuxieme solution : trouver le serpent le plus proche
+				
 			}
 		}
-		System.out.println("valMax:"+maxIdx);
+		//System.out.println("valMax:"+maxIdx);
 		
 		//recup la position de ce serpent + prevision
 		//on fonce dessus : return RIGHT ou LEFT
