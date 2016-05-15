@@ -44,7 +44,7 @@ public class AgentImpl extends Agent
 	@Override
 	public Direction processDirection() {
 		// TODO Auto-generated method stub
-		return null;
+	return null;
 	}
 	
 	/**
@@ -87,16 +87,12 @@ public class AgentImpl extends Agent
 		
 		Direction toTake = Direction.NONE;
 		
-		//recup la position de ce serpent + prevision
 		double result = closestSnake();
+		//System.out.println("aggres"+result);
 		
-		// si le serpent se trouve entre lowerBound et currentAngle
-		// alors on va à gauche
 		if(result>=lowerBound && result<=currentAngle)
 			toTake = Direction.LEFT;
 		
-		// si le serpent se trouve entre currentAngle et upperAngle
-		// alors on va à droite
 		else if(result >=currentAngle && result<=upperBound)
 			toTake = Direction.RIGHT;
 		
@@ -104,74 +100,61 @@ public class AgentImpl extends Agent
 		// on teste si l'angle est inférieur à upperBound - 2pi
 		else if(upperBound>2*Math.PI && result<=upperBound-2*Math.PI)
 			toTake = Direction.RIGHT;
-				
+					
 		// second cas limite : si la borne inférieure est négative
 		// on teste si l'angle est supérieur à lowerBound + 2PI
 		else if(lowerBound<0 && result>=lowerBound+2*Math.PI)
 			toTake = Direction.LEFT;
 
+		//recup la position de ce serpent + prevision
 		//on fonce dessus : return RIGHT ou LEFT
+		
 		return toTake;
 	}
 	
-	
-	//int maxIdx = 0;
-	
-			//checker les scores, recup le serpent qui a le plus haut score
-			// Je n'arrive pas a recup le score des snakes , 
-			//il faut relier le playerId du snake dans un tableau de player ?
-					
-					/*players.playerId = snake.playerId;				
-					Player[] players.getPlayerId() = i
-					if(players.totalScore > maxIdx)
-						maxIdx = i;*/
-							
-			//deuxieme solution : trouver le serpent le plus proche: 
-					
-				
-	
 	/**
-	 * Retourne la distance entre la position du serpent le plus proche et l'agent
-	 * 
-	 * @return double dist 
+	 * @return l'angle vers lequel se trouve un serpent
 	 */
 	public double closestSnake()
 	{
-		double dist = 0;
 		Board board = getBoard();
-		
+		double dist =0;
+		double angle = 0;
+
 		for(int i=0; i<board.snakes.length ;i++)
 		{	checkInterruption();
 				
-			Snake snake = board.snakes[i];	
+			Snake snake = board.snakes[i];			
 			
 			// on traite seulement les serpents des autres joueurs
 			if(i != getPlayerId())
 			{
-				//On recup la trainée du serpent i
-				Set<Position> trail = new TreeSet<Position>(snake.oldTrail);
-				trail.addAll(snake.newTrail);
+				Set<Position> trail = new TreeSet<Position>(snake.newTrail);
+				//trail.addAll(snake.newTrail);
 				
 				for(Position position: trail)
 				{	checkInterruption();	// une boucle, donc un autre test d'interruption
 					
 					// on récupère l'angle entre la tête du serpent de l'agent 
 					// et la position traitée (donc une valeur entre 0 et 2*PI)
-					double angle = Math.atan2(position.y-agentSnake.currentY, position.x-agentSnake.currentX);
+					angle = Math.atan2(position.y-agentSnake.currentY, position.x-agentSnake.currentX);
+					
 					if(angle<0)
 						angle = angle + 2*Math.PI;
-						
+					
 					// si la position est visible par le serpent de l'agent
 					if(isInSight(angle))
 					{	
 						// on calcule la distance entre cette position et la tête du serpent de l'agent
-						dist = Math.sqrt(
+							dist = Math.sqrt(
 								Math.pow(agentSnake.currentX-position.x, 2) 
 								+ Math.pow(agentSnake.currentY-position.y,2));
+							//System.out.println("dist"+dist);
 					}
 				}
 			}
 		}
-		return dist;	
+		//System.out.println("final "+angle);
+		return angle;
 	}
 }
