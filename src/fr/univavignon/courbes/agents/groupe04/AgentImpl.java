@@ -211,6 +211,7 @@ public class AgentImpl extends Agent
 		
 		// 5° de vision
 		if(agent.currentAngle <= angleEsquive+Math.PI/60 && agent.currentAngle>=angleEsquive-Math.PI/60){
+<<<<<<< HEAD
 			
 			return Direction.NONE;
 		}
@@ -519,6 +520,313 @@ public class AgentImpl extends Agent
 						Math.pow(agentSnake.currentX-position.x, 2) 
 						+ Math.pow(agentSnake.currentY-position.y,2));
 					
+=======
+//			System.out.println("tout droit !");
+			return Direction.NONE;
+		}
+		// on teste si l'angle est entre lowerBound et currentAngle 
+		// attention : l'axe des y est orienté vers le bas
+		// (en conséquence, par exemple, PI/2 est orienté vers le bas)
+		if(angle>=lowerBound && angle<=currentAngle )
+			return RIGHT;
+
+		// on teste si l'angle est entre currentAngle et upperBound
+		else if(angle>=currentAngle && angle<=upperBound )
+			return LEFT;
+		
+		// premier cas limite : si la borne supérieure dépasse 2PI
+		// on teste si l'angle est inférieur à upperBound - 2pi
+		else if(upperBound>2*Math.PI && angle<=upperBound-2*Math.PI)
+			return LEFT;
+		
+		// second cas limite : si la borne inférieure est négative
+		// on teste si l'angle est supérieur à lowerBound + 2PI
+		else if(lowerBound<0 && angle>=lowerBound+2*Math.PI)
+			return RIGHT;
+		
+		return Direction.NONE;
+	}
+	
+
+	
+	/**
+	 * Détermine si on considère que la tête du serpent de l'agent
+	 * se trouve dans un coin de l'aire de jeu.
+	 *  
+	 * @return
+	 * 		{@code true} ssi l'agent est dans un coin.
+	 */
+	private boolean isInCorner()
+	{	checkInterruption();	// on doit tester l'interruption au début de chaque méthode
+		
+		boolean result = agentSnake.currentX<CORNER_THRESHOLD && agentSnake.currentY<CORNER_THRESHOLD
+			|| (getBoard().width-agentSnake.currentX)<CORNER_THRESHOLD && agentSnake.currentY<CORNER_THRESHOLD
+			|| agentSnake.currentX<CORNER_THRESHOLD && (getBoard().height-agentSnake.currentY)<CORNER_THRESHOLD
+			|| (getBoard().width-agentSnake.currentX)<CORNER_THRESHOLD && (getBoard().height-agentSnake.currentY)<CORNER_THRESHOLD;
+		return result;
+	}
+
+	
+	
+
+	////////////////////////////////////////////////////////////////
+	////	TRAITEMENT DES OBSTACLES
+	////////////////////////////////////////////////////////////////
+	/** On récupère la zone la plus sécurisé autour du snake
+	 * @param snake par rapport à ce snake
+	 * @param result tableau contenant le resultat
+	 */
+	private void processNoObstacle(Snake snake, double result[])
+	{	checkInterruption();	// on doit tester l'interruption au début de chaque méthode
+		
+		// on récupère les positions de la trainée (complète) du serpent
+		Set<Position> trail = new TreeSet<Position>(snake.oldTrail);
+		
+		if(getPlayerId() != snake.playerId) trail.addAll(snake.newTrail);
+		
+		// pour chaque position de cette trainée
+		for(Position position: trail)
+		{	checkInterruption();	// une boucle, donc un autre test d'interruption
+			
+			// on récupère l'angle entre la tête du serpent de l'agent 
+			// et la position traitée (donc une valeur entre 0 et 2*PI)
+			double angle = Math.atan2(position.y-agentSnake.currentY, position.x-agentSnake.currentX);
+			if(angle<0)
+				angle = angle + 2*Math.PI;
+				
+			double dist = Math.sqrt(
+					Math.pow(agentSnake.currentX-position.x, 2) 
+					+ Math.pow(agentSnake.currentY-position.y,2));
+			// si la position est visible par le serpent de l'agent
+				if(!isInSight(angle))
+				{	// on calcule la distance entre cette position et la tête du serpent de l'agent
+					// si la position est plus proche que le plus proche obstacle connu : on met à jour
+						if(dist<result[0] && dist<250*agent.movingSpeed*agent.headRadius)
+						{	
+
+							result[0] = dist;	// mise à jour de la distance
+							result[1] = angle;	// mise à jour de l'angle
+						}	
+				
+				}
+		}
+	}
+	
+	/**
+	 * Reçoit un serpent et détermine le point le plus proche de sa
+	 * trainée, ainsi que l'angle formé avec la position courante
+	 * de la tête du serpent de cet agent.
+	 * 
+	 * @param snake
+	 * 		Le serpent à traiter (un autre joueur).
+	 * @param result
+	 * 		Un tableau de réel contenant la distance du pixel le plus
+	 * 		proche appartenant à un obstacle, et l'angle qu'il forme
+	 * 		avec la position courante de cet agent.
+	 */
+	private void processObstacleSnake(Snake snake, double result[])
+	{	checkInterruption();	// on doit tester l'interruption au début de chaque méthode
+		
+		// on récupère les positions de la trainée (complète) du serpent
+		Set<Position> trail = new TreeSet<Position>(snake.oldTrail);
+		
+		if(getPlayerId() != snake.playerId) trail.addAll(snake.newTrail);
+		
+		// pour chaque position de cette trainée
+		for(Position position: trail)
+		{	checkInterruption();	// une boucle, donc un autre test d'interruption
+			
+			// on récupère l'angle entre la tête du serpent de l'agent 
+			// et la position traitée (donc une valeur entre 0 et 2*PI)
+			double angle = Math.atan2(position.y-agentSnake.currentY, position.x-agentSnake.currentX);
+			if(angle<0)
+				angle = angle + 2*Math.PI;
+				
+			double dist = Math.sqrt(
+					Math.pow(agentSnake.currentX-position.x, 2) 
+					+ Math.pow(agentSnake.currentY-position.y,2));
+			// si la position est visible par le serpent de l'agent
+			if(getPlayerId() != snake.playerId ){
+				if(isInSight(angle))
+				{	// on calcule la distance entre cette position et la tête du serpent de l'agent
+					// si la position est plus proche que le plus proche obstacle connu : on met à jour
+						if(dist<result[0] && dist<250*agent.movingSpeed*agent.headRadius )
+						{	
+
+							result[0] = dist;	// mise à jour de la distance
+							result[1] = angle;	// mise à jour de l'angle
+						}	
+				
+				}
+			}
+			else{
+				if(isInSight(angle))
+				{	// on calcule la distance entre cette position et la tête du serpent de l'agent
+					// si la position est plus proche que le plus proche obstacle connu : on met à jour
+						if(dist<result[0] && dist > 5 && dist<250*agent.movingSpeed*agent.headRadius)
+						{	
+							result[0] = dist;	// mise à jour de la distance
+							result[1] = angle;	// mise à jour de l'angle
+						}	
+				
+				}
+			}
+		}
+	}
+	
+	
+	
+
+	
+	
+	/**
+	 * Détermine le point le plus proche de la bordure constituant un
+	 * obstacle pour cet agent, ainsi que l'angle formé avec la position 
+	 * courante de la tête du serpent de cet agent.
+	 * 
+	 * @param result
+	 * 		Un tableau de réel contenant la distance du pixel le plus
+	 * 		proche appartenant à un obstacle, et l'angle qu'il forme
+	 * 		avec la position courante de cet agent.
+	 */
+	private void processObstacleBorder(double result[])
+	{	checkInterruption();	// on doit tester l'interruption au début de chaque méthode
+		
+		// x = 0
+		if(result[0]==Double.POSITIVE_INFINITY 
+				|| isInSight(Math.PI) && agentSnake.currentX<result[0])
+		{	result[0] = agentSnake.currentX;
+			result[1] = Math.PI;
+		}
+		
+		// y = 0
+		if(isInSight(3*Math.PI/2) && agentSnake.currentY<result[0])
+		{	result[0] = agentSnake.currentY;
+			result[1] = 3*Math.PI/2;
+		}
+		
+		// x = max_x
+		if(isInSight(0) && getBoard().width-agentSnake.currentX<result[0])
+		{	result[0] = getBoard().width - agentSnake.currentX;
+			result[1] = 0;
+		}
+		
+		// y == max_y
+		if(isInSight(Math.PI/2) && getBoard().height-agentSnake.currentY<result[0])
+		{	result[0] = getBoard().height - agentSnake.currentY;
+			result[1] = Math.PI/2.0;
+		}
+	}
+	
+	
+	
+	/** on verifie qu'il n'y a rien dans la zone autour de nous
+	 * @return si le danger est présent ou pas
+	 */
+	public boolean checkIfSafe(){
+		checkInterruption();	// on doit tester l'interruption au début de chaque boucle
+		
+		double tab[] = {Double.POSITIVE_INFINITY,0};
+		
+		processObstacleBorder(tab);
+		
+		Board board = getBoard();
+		Snake[] tab2 = board.snakes;
+		for(Snake snake : tab2){
+			processObstacleSnake(snake, tab);
+		}
+		
+		if(tab[0] < 250*agent.movingSpeed*agent.headRadius){
+			return false;
+		}
+		else return true;
+	}
+	
+	
+	/**
+	 * Check le serpent le proche et fonce dessus
+	 * 
+	 * @return Direction toTake : direction que va prendre l'agent
+	 */
+	public Direction aggression()
+	{
+		checkInterruption();
+		
+		Direction toTake = Direction.NONE;
+		
+		//recup la position de ce serpent + prevision
+		double result = closestSnake();
+		
+		// si le serpent se trouve entre lowerBound et currentAngle
+		// alors on va à gauche
+		if(result>=lowerBound && result<=currentAngle)
+			toTake = LEFT;
+		
+		// si le serpent se trouve entre currentAngle et upperAngle
+		// alors on va à droite
+		else if(result >=currentAngle && result<=upperBound)
+			toTake = RIGHT;
+		
+		// premier cas limite : si la borne supérieure dépasse 2PI
+		// on teste si l'angle est inférieur à upperBound - 2pi
+		else if(upperBound>2*Math.PI && result<=upperBound-2*Math.PI)
+			toTake = RIGHT;
+		
+		// second cas limite : si la borne inférieure est négative
+		// on teste si l'angle est supérieur à lowerBound + 2PI
+		else if(lowerBound<0 && result>=lowerBound+2*Math.PI)
+			toTake = LEFT;
+		
+		//on fonce dessus : return RIGHT ou LEFT
+		return toTake;
+	}
+	
+	
+	//int maxIdx = 0;
+	
+			//checker les scores, recup le serpent qui a le plus haut score
+			// Je n'arrive pas a recup le score des snakes , 
+			//il faut relier le playerId du snake dans un tableau de player ?
+					
+					/*players.playerId = snake.playerId;				
+					Player[] players.getPlayerId() = i
+					if(players.totalScore > maxIdx)
+						maxIdx = i;*/
+							
+			//deuxieme solution : trouver le serpent le plus proche: 
+					
+				
+	
+	/**
+	 * Retourne l'angle entre la position du serpent le plus proche et l'agent
+	 * 
+	 * @return double dist 
+	 */
+	public double closestSnake()
+	{
+		Board board = getBoard();
+		double angle = 0;
+		double distFinal = Double.POSITIVE_INFINITY;
+		for(int i=0; i<board.snakes.length ;i++)
+		{	checkInterruption();
+			
+			Snake snake = board.snakes[i];	
+			
+			// on traite seulement les serpents des autres joueurs
+			if(i != getPlayerId())
+			{
+				//On recup la trainée du serpent i
+				Set<Position> trail = new TreeSet<Position>(snake.newTrail);
+				
+				for(Position position: trail)
+				{	checkInterruption();	// une boucle, donc un autre test d'interruption
+					
+					// on récupère l'angle entre la tête du serpent de l'agent 
+					// et la position traitée (donc une valeur entre 0 et 2*PI)
+					double dista = Math.sqrt(
+						Math.pow(agentSnake.currentX-position.x, 2) 
+						+ Math.pow(agentSnake.currentY-position.y,2));
+>>>>>>> refs/remotes/upstream/master
 					
 					if(dista < distFinal){
 						angle = Math.atan2(position.y-agentSnake.currentY, position.x-agentSnake.currentX);

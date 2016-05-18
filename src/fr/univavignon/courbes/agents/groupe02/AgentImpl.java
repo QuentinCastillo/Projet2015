@@ -1,4 +1,6 @@
-package fr.univavignon.courbes.agents.avoidcloserwallagent;
+package fr.univavignon.courbes.agents.groupe02;
+
+import java.util.LinkedList;
 
 /*
  * Courbes
@@ -26,6 +28,7 @@ import fr.univavignon.courbes.common.Board;
 import fr.univavignon.courbes.common.Direction;
 import fr.univavignon.courbes.common.Position;
 import fr.univavignon.courbes.common.Snake;
+import fr.univavignon.courbes.common.ItemInstance;
 
 /**
  * Ceci est un agent bidon servant à illustrer comment l'API IA doit être utilisée. 
@@ -67,7 +70,7 @@ public class AgentImpl extends Agent
 	public Direction processDirection()
 	{	checkInterruption();	// on doit tester l'interruption au début de chaque méthode
 		Direction result;
-		//System.out.println("Updating player #"+getPlayerId());
+		boolean r = false;
 		
 		Board board = getBoard();
 		
@@ -94,28 +97,37 @@ public class AgentImpl extends Agent
 				double closestObstacle[] = {Double.POSITIVE_INFINITY, 0};
 				
 				// pour chaque serpent
-				for(int i=0;i<board.snakes.length;++i)
-				{	checkInterruption();	// on doit tester l'interruption au début de chaque boucle
-					Snake snake = board.snakes[i];
+					for(int i=0;i<board.snakes.length;++i)
+					{	checkInterruption();	// on doit tester l'interruption au début de chaque boucle
+						Snake snake = board.snakes[i];
+						
+						// on traite seulement les serpents des autres joueurs
+						if(i != getPlayerId())
+							// on met à jour la distance à l'obstacle le plus proche
+							processObstacleSnake(snake, closestObstacle);
+						else
+							IsMe(closestObstacle);
+					}
+					for(int i=0;i<board.snakes.length;++i)
+					{	checkInterruption();
+						Snake snake = board.snakes[i];
+						if(i != getPlayerId()){
+							if(!r)
+								//calcul si il est possible de tué un snake
+								r = KillSnake(snake,closestObstacle);
+						}
+					}
+					if(!r)
+						//si aucun il n'est pas possible de tuer un serpent alors on donnée essayé d'avoir un objet
+						r = takeObject(closestObstacle,board);	
+					// on teste si les bordures de l'aire de jeu sont proches
+					processObstacleBorder(closestObstacle);
 					
-					// on traite seulement les serpents des autres joueurs
-					if(i != getPlayerId())
-						// on met à jour la distance à l'obstacle le plus proche
-						processObstacleSnake(snake, closestObstacle);
+					// on prend une direction de manière à éviter cet obstacle 
+					result = getDodgeDirection(closestObstacle[1]);
+					//dans cette configuration, nous donnons la prioriété a la survie du serpent. 
 				}
-				
-				// on teste si les bordures de l'aire de jeu sont proches
-				processObstacleBorder(closestObstacle);
-				
-				// on prend une direction de manière à éviter cet obstacle 
-				result = getDodgeDirection(closestObstacle[1]);
 			}
-			
-			// en cas de malus de type commandes inversées, on prend la direction opposée
-			if(agentSnake.inversion)
-				result = result.getInverse();
-		}
-		
 		previousDirection = result;
 		return result;
 	}
@@ -277,6 +289,98 @@ public class AgentImpl extends Agent
 				}			
 			}
 		}
+	}
+	/**
+	 * On indique au serpent si sa trainer dans sur sa route ou non 
+	 * 
+	 * @param result
+	 * 	tableau de reel, trouvant le plus proche obstacle
+	*/
+	private void IsMe(double result[]){
+		checkInterruption();
+		Set<Position> trail = new TreeSet<Position>(agentSnake.oldTrail);
+		for(Position position: trail)
+		{	checkInterruption();
+			if(!(position.y<=agentSnake.currentY && position.y>=(agentSnake.currentY)-100)){
+				if(!(position.x<=agentSnake.currentX && position.x>=(agentSnake.currentX)-100)){	
+					double angle = Math.atan2(position.y-agentSnake.currentY, position.x-agentSnake.currentX);
+					if(angle<0)
+						angle = angle + 2*Math.PI;
+					if(isInSight(angle/(3/4)))
+					{
+						double dist = Math.sqrt(
+							Math.pow(agentSnake.currentX-position.x, 2) 
+							+ Math.pow(agentSnake.currentY-position.y,2));
+						if(dist<result[0])
+						{	result[0] = dist;
+							result[1] = angle;
+						}			
+					}
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Fonction permetant de tuer un snake, si la position de l'agent le permet
+	 * @param snake
+	 * snake différent de l'agent
+	 * @param result
+	 * tableau de coordonnée 
+	 * @return
+	 * true si il est possible de tuè le snake. false sinon
+	 */
+	private boolean KillSnake(Snake snake, double result[])
+	{
+		if(snake.movingSpeed == agentSnake.movingSpeed){
+			double angle = Math.atan2(snake.currentY-agentSnake.currentY, snake.currentX-agentSnake.currentX);
+			if(angle<0)
+				angle = angle + 2*Math.PI;
+			if(isInSight(angle/(3/4)))
+			{
+				double dist = Math.sqrt(
+					Math.pow(agentSnake.currentX-snake.currentX, 2) 
+					+ Math.pow(agentSnake.currentY-snake.currentY,2));
+				if(dist<result[0])
+				{	result[0] = dist;
+					result[1] = angle + 10;
+					return true;
+				}		
+			}
+		}
+		return false;
+	}
+	
+	/**
+	 * permet au snake de prendre un objet
+	 * @param result
+	 * tableau de coordonnée 
+	 * @param board
+	 * board actuelle
+	 * @return
+	 * true si il est possible de prendre un objet. False sinon
+	 */
+	private boolean takeObject(double result[], Board board)
+	{	checkInterruption();
+		LinkedList<ItemInstance> l = new LinkedList<ItemInstance>(board.items);
+		for(ItemInstance item: l)
+		{	checkInterruption();
+			double angle = Math.atan2(item.y-agentSnake.currentY, item.x-agentSnake.currentX);
+			if(angle<0)
+				angle = angle + 2*Math.PI;
+			if(isInSight(angle/(3/4)))
+			{
+				double dist = Math.sqrt(
+					Math.pow(agentSnake.currentX-item.x, 2) 
+					+ Math.pow(agentSnake.currentY-item.y,2));
+				if(dist<result[0])
+				{	result[0] = dist;
+					result[1] = angle;
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 	
 	/**
